@@ -298,7 +298,51 @@ En local:
 
 **Pendiente de comprobar por ti:** el flujo completo en el navegador (login y guardar), porque desde este entorno no se llega a `supabase.co`.
 
+## Fase 5 — Imágenes (12/11/2026)
+
+**Flujo de subida**
+1. **Navegador** (`lib/media/compress.ts`):
+   - Comprueba que el archivo se decodifica como imagen y limita el original a 25 MB.
+   - Lo reduce al lado mayor (2000 px en fotos y portadas, 800 px en logos) y lo convierte a WebP con calidad 0,85. Si el navegador no codifica WebP, usa JPEG, o PNG para los logos con transparencia.
+   - Al redibujar se eliminan los metadatos EXIF (por ejemplo, el GPS del móvil).
+2. **Subida directa al bucket `media`** (`components/admin/upload.ts`), con la sesión del editor:
+   - Cada archivo recibe un nombre único (UUID) y una caché de 1 año.
+   - Rutas: `products/{id}/{uuid}.webp` y `brands/{id}/{logo|cover}-{uuid}.webp`.
+   - Así se evita el límite de tamaño de las Server Actions en Vercel.
+3. **Servidor** (`lib/admin/storage.ts`, `lib/media/signature.ts`). Antes de registrar el archivo en la base de datos:
+   - valida que la ruta pertenece a ese producto o marca;
+   - descarga el archivo y comprueba que pesa como máximo 5 MB y que sus primeros bytes son de JPEG, PNG, WebP o AVIF.
+   - Si no cumple, **lo borra**.
+4. **Bucket:** además, limita a 5 MB y a MIME de imagen, y sus políticas RLS solo dejan subir, listar y borrar al staff. SVG queda excluido a propósito, porque puede contener scripts.
+
+**Galería de producto** (`/admin/productos/[id]`)
+- Subida múltiple (máx. 12) con vista previa y progreso.
+- Imagen principal (si se borra, pasa a serlo la siguiente) y orden con ← →.
+- Texto alternativo FR y EN.
+- Sustituir conserva la posición, la principal y el alt, y borra el archivo antiguo.
+- Al eliminar una foto se borra también su archivo.
+
+**Marcas** (`/admin/marcas/[id]`)
+- Logotipo (conserva la transparencia) y portada: subir, sustituir y quitar.
+- La portada se muestra en la página pública de la marca y el logo en las tarjetas.
+
+**Limpieza:** eliminar un producto o una marca borra su carpeta del bucket, sin dejar archivos huérfanos.
+
+**Pruebas**
+
+| Prueba | Resultado |
+|---|---|
+| `npm test` | 10/10 |
+| Firma de imagen: rechaza ejecutables, PDF, SVG, PHP, GIF y MP4 | ✓ |
+| Rutas: rechaza otra carpeta de producto, recorrido `../`, SVG y nombres no UUID | ✓ |
+| Compresión en Chrome: foto 4000×3000 | 1,7 MB → 292 KB, 2000×1500, WebP |
+| Compresión en Chrome: logo PNG | conserva el alfa |
+| Compresión en Chrome: «.jpg» falso y SVG | rechazados |
+| Storage en el proyecto real (transacción deshecha): el admin sube y lista; un usuario sin rol | error RLS |
+| Configuración del bucket | 5 MB y JPEG/PNG/WebP/AVIF |
+
+Supabase impide borrar archivos con SQL directo (solo con su API de Storage, que es la que usa el panel), así que el borrado se probará en el navegador.
+
 ## Siguientes fases
 
-- **Fase 5:** subida y gestión de imágenes (galería, imagen principal, logos de marca).
 - **Fases 6–9:** según el prompt maestro.

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { bool, dbErrorMessage, int, SLUG_RE, slugify, str, translations, uuid, type ActionState } from "@/lib/admin/form";
 import { splitLocales, validateTranslations } from "@/lib/admin/i18n";
 import { refreshPublicContent } from "@/lib/admin/revalidate";
+import { removeFolder } from "@/lib/admin/storage";
 
 const FIELDS = { name: 80, description: 2000, seo_title: 70, seo_description: 170 };
 
@@ -61,6 +62,7 @@ export async function deleteBrand(rawId: string, _form: FormData) {
   if (count) redirect(`/admin/marcas/${id}?error=in-use`);
   const { error } = await db.from("brands").delete().eq("id", id);
   if (error) redirect(`/admin/marcas/${id}?error=in-use`);
+  await removeFolder(db, `brands/${id}`);
   refreshPublicContent();
   redirect("/admin/marcas?ok=deleted");
 }

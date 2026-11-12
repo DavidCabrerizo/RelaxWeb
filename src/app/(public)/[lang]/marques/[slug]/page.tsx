@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ProductCard } from "@/components/ui/Cards";
 import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
@@ -41,6 +42,12 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/marques/[
 
   return (
     <>
+      {brand.coverUrl && (
+        <div className="relative aspect-[21/9] max-h-[420px] w-full overflow-hidden sm:aspect-[3/1]">
+          <Image src={brand.coverUrl} alt="" fill priority sizes="100vw" className="object-cover" />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+        </div>
+      )}
       <PageHeader title={brand.name} intro={brand.description}>
         <Breadcrumbs
           locale={lang}

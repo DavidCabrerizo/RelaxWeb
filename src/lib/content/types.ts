@@ -20,6 +20,7 @@ export type RawBrand = {
   name: Localized;
   description?: Localized;
   logoUrl?: string;
+  coverUrl?: string;
 };
 
 export type RawProduct = {
@@ -38,7 +39,7 @@ export type RawProduct = {
 
 // ---- Forma "resuelta" para un idioma (lo que reciben los componentes) ----
 export type Category = { slug: string; icon: CategoryIconName; name: string; description?: string };
-export type Brand = { slug: string; isFeatured: boolean; name: string; description?: string; logoUrl?: string };
+export type Brand = { slug: string; isFeatured: boolean; name: string; description?: string; logoUrl?: string; coverUrl?: string };
 export type Product = {
   slug: string;
   isFeatured: boolean;

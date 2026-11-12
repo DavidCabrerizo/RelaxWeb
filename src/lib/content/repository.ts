@@ -39,6 +39,7 @@ const toBrand = (b: RawBrand, l: Locale): Brand => ({
   name: pick(b.name, l),
   description: pick(b.description, l),
   logoUrl: b.logoUrl,
+  coverUrl: b.coverUrl,
 });
 
 function toProduct(p: RawProduct, cat: Catalog, l: Locale): Product {

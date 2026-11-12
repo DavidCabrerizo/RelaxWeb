@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { bool, dbErrorMessage, int, SLUG_RE, slugify, str, translations, uuid, type ActionState } from "@/lib/admin/form";
 import { splitLocales, validateTranslations } from "@/lib/admin/i18n";
 import { refreshPublicContent } from "@/lib/admin/revalidate";
+import { removeFolder } from "@/lib/admin/storage";
 
 const FIELDS = { name: 120, short_description: 300, description: 5000, seo_title: 70, seo_description: 170 };
 
@@ -104,9 +105,10 @@ export async function deleteProduct(rawId: string, _form: FormData) {
   const id = uuid(rawId);
   if (!id) return;
   const db = await createClient();
-  // Traducciones e imágenes (filas) se borran en cascada; los archivos de Storage se limpian en la Fase 5
+  // Traducciones y filas de imágenes se borran en cascada; los archivos del bucket, aquí
   const { error } = await db.from("products").delete().eq("id", id);
   if (error) redirect(`/admin/productos/${id}?error=delete`);
+  await removeFolder(db, `products/${id}`);
   refreshPublicContent();
   redirect("/admin/productos?ok=deleted");
 }

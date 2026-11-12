@@ -70,9 +70,11 @@ export function ProductForm({ product, brands, categories }: { product?: Product
         <Checkbox name="is_featured" label="Producto destacado" hint="Aparece en la página de inicio." defaultChecked={product?.is_featured} />
       </div>
 
-      <div className="rounded-2xl border border-dashed border-line-dark p-5 text-sm text-muted-dark">
-        Fotografías del producto: subida, galería, imagen principal y orden llegan en la Fase 5.
-      </div>
+      {!product && (
+        <div className="rounded-2xl border border-dashed border-line-dark p-5 text-sm text-muted-dark">
+          Las fotografías se añaden después de crear el producto.
+        </div>
+      )}
 
       <SubmitButton>{product ? "Guardar cambios" : "Crear producto"}</SubmitButton>
     </AdminForm>

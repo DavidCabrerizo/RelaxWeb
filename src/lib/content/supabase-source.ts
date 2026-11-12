@@ -50,7 +50,7 @@ export async function loadCatalog(): Promise<Catalog> {
       .order("sort_order"),
     db
       .from("brands")
-      .select("id, slug, logo_path, is_featured, sort_order, brand_translations(locale, name, description)")
+      .select("id, slug, logo_path, cover_path, is_featured, sort_order, brand_translations(locale, name, description)")
       .order("sort_order"),
     db
       .from("products")
@@ -95,6 +95,7 @@ export async function loadCatalog(): Promise<Catalog> {
       name,
       description: localized(b.brand_translations as Tr[], "description"),
       logoUrl: mediaUrl(b.logo_path),
+      coverUrl: mediaUrl(b.cover_path),
     };
     brandById.set(b.id, raw);
     brandList.push(raw);

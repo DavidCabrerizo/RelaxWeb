@@ -8,6 +8,8 @@ import { createClient } from "@/lib/supabase/server";
 import { trOf } from "@/lib/admin/i18n";
 import { uuid } from "@/lib/admin/form";
 import { BrandForm } from "../BrandForm";
+import { BrandImages } from "@/components/admin/BrandImages";
+import { mediaUrl } from "@/lib/supabase/public";
 import { deleteBrand } from "../actions";
 
 export default function EditBrandPage({ params, searchParams }: PageProps<"/admin/marcas/[id]">) {
@@ -47,6 +49,10 @@ async function Editor({ params, searchParams }: PageProps<"/admin/marcas/[id]">)
         </p>
       )}
       <BrandForm brand={brand} />
+
+      <div className="mt-8">
+        <BrandImages brandId={id} logoUrl={mediaUrl(brand.logo_path)} coverUrl={mediaUrl(brand.cover_path)} />
+      </div>
 
       <section className="mt-12" aria-labelledby="h-brand-products">
         <h2 id="h-brand-products" className="text-sm font-bold uppercase tracking-wider text-muted-dark">

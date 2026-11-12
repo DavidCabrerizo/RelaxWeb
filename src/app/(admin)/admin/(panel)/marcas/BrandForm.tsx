@@ -37,9 +37,11 @@ export function BrandForm({ brand }: { brand?: Brand }) {
         <Checkbox name="is_featured" label="Marca destacada" hint="Aparece en la página de inicio." defaultChecked={brand?.is_featured} />
       </div>
 
-      <div className="rounded-2xl border border-dashed border-line-dark p-5 text-sm text-muted-dark">
-        Logotipo e imagen de portada: se suben desde aquí a partir de la Fase 5 (gestión de imágenes).
-      </div>
+      {!brand && (
+        <div className="rounded-2xl border border-dashed border-line-dark p-5 text-sm text-muted-dark">
+          El logotipo y la portada se añaden después de crear la marca.
+        </div>
+      )}
 
       <SubmitButton>{brand ? "Guardar cambios" : "Crear marca"}</SubmitButton>
     </AdminForm>

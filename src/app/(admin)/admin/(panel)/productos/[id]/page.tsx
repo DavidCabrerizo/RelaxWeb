@@ -9,6 +9,8 @@ import { trOf } from "@/lib/admin/i18n";
 import { uuid } from "@/lib/admin/form";
 import { brandAndCategoryOptions } from "@/lib/admin/options";
 import { ProductForm } from "../ProductForm";
+import { ProductGallery } from "@/components/admin/ProductGallery";
+import { mediaUrl } from "@/lib/supabase/public";
 import { deleteProduct } from "../actions";
 
 const ERRORS: Record<string, string> = {
@@ -34,9 +36,10 @@ async function Editor({ params, searchParams }: PageProps<"/admin/productos/[id]
   const errorKey = Array.isArray(error) ? error[0] : error;
 
   const db = await createClient();
-  const [{ data: product }, options] = await Promise.all([
+  const [{ data: product }, options, { data: images }] = await Promise.all([
     db.from("products").select("*, product_translations(*)").eq("id", id).maybeSingle(),
     brandAndCategoryOptions(),
+    db.from("product_images").select("id, storage_path, is_primary, alt, sort_order").eq("product_id", id).order("sort_order").order("created_at"),
   ]);
   if (!product) notFound();
   const name = trOf(product.product_translations, "fr")?.name ?? product.slug;
@@ -62,6 +65,18 @@ async function Editor({ params, searchParams }: PageProps<"/admin/productos/[id]
       </div>
 
       <ProductForm product={product} brands={options.brands} categories={options.categories} />
+
+      <div className="mt-8">
+        <ProductGallery
+          productId={id}
+          images={(images ?? []).map((img) => ({
+            id: img.id,
+            url: mediaUrl(img.storage_path)!,
+            isPrimary: img.is_primary,
+            alt: (img.alt ?? {}) as { fr?: string; en?: string },
+          }))}
+        />
+      </div>
 
       <section className="mt-12 flex justify-end border-t border-line-dark pt-6">
         <DeleteForm action={deleteProduct.bind(null, id)} confirmText={`¿Eliminar «${name}»? Esta acción no se puede deshacer.`} />

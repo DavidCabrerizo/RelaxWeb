@@ -2,7 +2,7 @@
 
 Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-**Estado:** Fases 1–4 completadas (arquitectura y diseño, web pública FR/EN, Supabase y acceso al panel, CRUD de productos, marcas y categorías).
+**Estado:** Fases 1–5 completadas (arquitectura y diseño, web pública FR/EN, Supabase y acceso al panel, CRUD de productos, marcas y categorías, gestión de imágenes).
 
 Pruebas: `npm test`.
 
