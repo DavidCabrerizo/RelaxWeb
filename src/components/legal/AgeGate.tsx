@@ -22,25 +22,34 @@ export function AgeGate({ labels }: { labels: Labels }) {
   const confirmed = useSyncExternalStore(subscribe, isConfirmed, () => true);
   const [denied, setDenied] = useState(false);
   const yesRef = useRef<HTMLButtonElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const state: "hidden" | "ask" | "denied" = confirmed ? "hidden" : denied ? "denied" : "ask";
 
   useEffect(() => {
-    if (state === "hidden") {
-      document.body.style.overflow = "";
-      return;
-    }
+    if (state === "hidden") return;
+    // Modal de verdad: el resto de la página queda inerte (ni Tab ni lectores de pantalla llegan a ella)
+    const root = rootRef.current;
+    const others = Array.from(document.body.children).filter((el): el is HTMLElement => el instanceof HTMLElement && el !== root && !el.inert);
+    others.forEach((el) => (el.inert = true));
     document.body.style.overflow = "hidden";
-    yesRef.current?.focus();
+    if (state === "ask") yesRef.current?.focus();
+    else root?.focus();
+    return () => {
+      others.forEach((el) => (el.inert = false));
+      document.body.style.overflow = "";
+    };
   }, [state]);
 
   if (state === "hidden") return null;
 
   return (
     <div
+      ref={rootRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-labelledby="age-title"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/95 px-4 backdrop-blur"
+      className="fixed inset-0 z-[100] flex outline-none items-center justify-center bg-ink/95 px-4 backdrop-blur"
     >
       <div className="w-full max-w-md animate-rise rounded-[var(--radius-card)] border border-line-dark bg-ink-2 p-8 text-center">
         <Logo className="mx-auto w-48" />

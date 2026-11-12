@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
+import { securityHeaders } from "./src/lib/security/headers";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  poweredByHeader: false,
+  async headers() {
+    const headers = securityHeaders({
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      isDev: process.env.NODE_ENV === "development",
+    });
+    return [{ source: "/:path*", headers }];
+  },
   images: {
     // Imágenes subidas al bucket público "media" de Supabase
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/media/**" }],

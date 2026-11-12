@@ -2,9 +2,11 @@
 
 Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-**Estado:** Fases 1–7 completadas (arquitectura y diseño, web pública FR/EN, Supabase y panel, CRUD, imágenes, contenidos, configuración y formulario de contacto, SEO local y Google Business Profile).
+**Estado:** Fases 1–8 completadas (arquitectura y diseño, web pública FR/EN, Supabase y panel, CRUD, imágenes, contenidos, configuración y formulario de contacto, SEO local y Google Business Profile, seguridad, accesibilidad y rendimiento).
 
-Pruebas: `npm test`.
+Pruebas: `npm test` (unitarias). Auditorías contra un servidor en marcha:
+`npm run audit:a11y` (axe, WCAG 2.2 AA; `BASE_URL=https://… npm run audit:a11y` para la web publicada)
+y `npm run audit:perf` (Lighthouse móvil).
 
 ## Arrancar en local
 

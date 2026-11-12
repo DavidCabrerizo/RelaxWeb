@@ -83,7 +83,7 @@ export function ContactForm({ lang, labels, privacyHref }: { lang: string; label
         <input type="checkbox" name="consent" required className="mt-1 h-5 w-5 shrink-0 accent-[var(--color-lime)]" {...field("consent")} />
         <span>
           {labels.consent}{" "}
-          <Link href={privacyHref} className="text-lime underline-offset-4 hover:underline">
+          <Link href={privacyHref} className="text-lime underline underline-offset-4 hover:decoration-2">
             {labels.privacy}
           </Link>
           {err("consent") && <span id="cf-consent-error" className="mt-1 block text-xs text-red-300">{err("consent")}</span>}

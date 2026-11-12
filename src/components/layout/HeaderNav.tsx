@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import { stripLocale } from "@/lib/i18n/path";
 
@@ -19,6 +19,7 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
   const current = stripLocale(usePathname());
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(current);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Cerrar el menú al navegar (ajuste de estado durante el render, patrón recomendado por React)
   if (lastPath !== current) {
@@ -26,11 +27,20 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
     setOpen(false);
   }
 
-  // Bloquear el scroll de fondo mientras el menú está abierto
+  // Menú abierto: sin scroll de fondo y Escape lo cierra devolviendo el foco al botón
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
@@ -79,6 +89,7 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
       <div className="flex items-center gap-2 md:hidden">
         {switcher}
         <button
+          ref={buttonRef}
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}

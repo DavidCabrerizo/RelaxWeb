@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --conditions=react-server --import tsx --test tests/*.test.ts"
+    "test": "node --conditions=react-server --import tsx --test tests/*.test.ts",
+    "audit:a11y": "node scripts/audit-a11y.mjs",
+    "audit:perf": "lighthouse ${BASE_URL:-http://localhost:3000} --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --view"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -24,8 +26,11 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.14.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "lighthouse": "^12.8.2",
+    "playwright": "^1.63.0",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^5"

@@ -426,7 +426,57 @@ Avisos del asesor de Supabase:
 
 **Verificación:** 23/23 tests (`tests/seo.test.ts` cubre Store, breadcrumbs, FAQ y la inyección de `</script>`), `tsc`, `eslint` y build sin errores.
 
+## Fase 8 — Seguridad, accesibilidad y rendimiento (12/11/2026)
+
+**Cabeceras HTTP** (`src/lib/security/headers.ts`, aplicadas en `next.config.ts` a todas las rutas)
+
+| Cabecera | Valor / motivo |
+|---|---|
+| `Content-Security-Policy` | `default-src 'self'`; scripts y estilos solo propios (+ inline); imágenes propias, `data:`, `blob:` y el origen de Supabase; `connect-src` propio + Supabase (https y wss); `frame-src` solo Google Maps; `object-src 'none'`; `base-uri` y `form-action` `'self'`; `frame-ancestors 'none'`; `upgrade-insecure-requests` |
+| `Strict-Transport-Security` | 2 años con subdominios, solo en producción. Sin `preload`: inscribir el dominio es decisión del dueño |
+| `X-Frame-Options` | `DENY` (equivalente antiguo de `frame-ancestors`) |
+| `X-Content-Type-Options` | `nosniff` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | cámara, micrófono, ubicación, pagos, USB y Topics desactivados |
+| `Cross-Origin-Opener-Policy` | `same-origin` |
+| `X-Powered-By` | eliminada (`poweredByHeader: false`) |
+
+**Por qué la CSP no usa nonce:** con Cache Components las páginas se prerenderizan (○ estáticas, ◐ parciales) y Next 16 no puede poner un nonce en HTML generado en el build; su documentación indica que el prerender parcial es incompatible con nonces. Un nonce obligaría a renderizar cada visita en el servidor y a renunciar al CDN. Se acepta `'unsafe-inline'` en scripts porque la web nunca inserta HTML procedente del panel (React escapa todo el texto y el JSON-LD se serializa escapando `<`, `>` y `&`), y el resto de directivas siguen cerradas. Si algún día se añade contenido HTML enriquecido, habrá que revisar esta decisión.
+
+**Dependencias:** `npm audit --omit=dev` → 0 vulnerabilidades. Los avisos restantes son de herramientas de desarrollo (Lighthouse, ESLint) que no se despliegan.
+
+**Errores y 404**
+- `[lang]/[...rest]/page.tsx`: cualquier URL inexistente muestra el 404 propio dentro del layout del idioma (cabecera, pie, `<html lang>`) con estado HTTP 404. Antes salía el 404 genérico de Next, sin idioma.
+- `[lang]/error.tsx` (FR/EN), `admin/(panel)/error.tsx` (ES) y `global-error.tsx`: pantallas propias si falla la base de datos u otro error inesperado, con botón «Reintentar» y referencia del error.
+
+**Accesibilidad** (axe-core, WCAG 2.2 AA + buenas prácticas; 14 páginas en móvil y escritorio, más la primera visita con verificación de edad y aviso de cookies → 0 incidencias)
+
+Corregido:
+- La verificación de edad era un modal solo de nombre: con Tab el foco pasaba al contenido de detrás. Ahora el resto de la página queda `inert` mientras se muestra, y al responder «Non» el foco se queda en el diálogo.
+- El menú móvil no se cerraba con Escape; ahora sí, y el foco vuelve al botón del menú.
+- El enlace a la política de privacidad del formulario se distinguía solo por el color (contraste 1,4:1 con el texto); ahora está subrayado.
+- Saltos de nivel de título (h1 → h3) en catálogo y categorías: se añade un h2 «Produits» oculto visualmente antes de la cuadrícula.
+- 404 sin `lang` ni `main` (ver arriba).
+
+Comprobado con teclado: enlace «Aller au contenu» como primer Tab, foco visible en todos los controles, menú y diálogo operables sin ratón, y sin animaciones con «reducir movimiento».
+
+**Rendimiento** (Lighthouse 12, perfil móvil con CPU y red limitadas, datos de demo)
+
+| Página | Rendimiento | Accesibilidad | Buenas prácticas | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| Inicio | 96 | 100 | 100 | 100 | 2,8 s | 0,004 | 70 ms |
+| Catálogo | 96 | 100 | 100 | 100 | 2,4 s | 0 | 150 ms |
+| Producto | 96 | 100 | 100 | 100 | 2,5 s | 0 | 140 ms |
+| Contacto | 97 | 100 | 100 | 100 | 2,4 s | 0 | 100 ms |
+| Inicio EN | 94 | 100 | 100 | 100 | 2,7 s | 0,004 | 150 ms |
+
+Mejora aplicada: se elimina la fuente Montserrat cursiva, que no se usaba y se precargaba en todas las páginas (39 KB). Peso por página: 250–285 KB.
+Medido en local. En Vercel el TTFB baja gracias al CDN, pero las fotos reales del cliente pesarán más que las de demo: hay que repetir la medición tras la Fase 9 (`npm run audit:perf`).
+
+**Tests:** 30 unitarios (`tests/security.test.ts` añade la CSP, las cabeceras y el enrutado del proxy: 308 de `/fr`, reescritura a `/fr`, `/en` y `/admin` → login sin sesión), más `npm run audit:a11y` y `npm run audit:perf` contra un servidor en marcha.
+
+**Límites de esta verificación:** el panel solo se ha auditado en la pantalla de login, porque el sandbox no tiene red hacia Supabase para iniciar sesión. Hay que repetir `audit:a11y` con sesión, o revisar a mano, tras el despliegue.
+
 ## Siguientes fases
 
-- **Fase 8:** cabeceras de seguridad y CSP, más tests, auditoría de accesibilidad y Core Web Vitals.
 - **Fase 9:** despliegue en Vercel, dominio, Search Console, manual del panel y retirada de los datos de demo.

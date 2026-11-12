@@ -83,6 +83,7 @@ async function Catalog({
         {fmt(t.catalog.count, { n: products.length })}
       </p>
 
+      <h2 className="sr-only">{t.nav.products}</h2>
       {products.length ? (
         <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products.map((p) => (

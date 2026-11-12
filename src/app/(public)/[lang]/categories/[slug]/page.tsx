@@ -56,6 +56,7 @@ export default async function CategoryPage({ params }: PageProps<"/[lang]/catego
       </PageHeader>
       <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-muted-dark" role="status">{fmt(t.catalog.count, { n: products.length })}</p>
+        <h2 className="sr-only">{t.nav.products}</h2>
         <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products.map((p) => (
             <li key={p.slug}>
