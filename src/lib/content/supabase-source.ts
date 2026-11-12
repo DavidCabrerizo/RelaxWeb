@@ -150,25 +150,25 @@ export async function loadSettings(): Promise<SiteSettings & { enabledLocales: s
 
   const { data, error } = await createPublicClient().from("site_settings").select("*").eq("id", 1).maybeSingle();
   if (error) throw new Error(`Supabase: ${error.message}`);
-  const s = data ?? {};
-  const num = (v: unknown) => (v === null || v === undefined || v === "" ? null : Number(v));
+  const s = data;
+  const num = (v: number | string | null | undefined) => (v === null || v === undefined || v === "" ? null : Number(v));
 
   return {
-    businessName: s.business_name ?? "Relax Sélection",
-    street: s.address_street ?? null,
-    postalCode: s.address_postal_code ?? null,
-    city: s.address_city ?? "Genève",
-    country: s.address_country ?? "CH",
-    latitude: num(s.latitude),
-    longitude: num(s.longitude),
-    phone: s.phone ?? null,
-    whatsapp: s.whatsapp ?? null,
-    email: s.email ?? null,
-    googleMapsUrl: s.google_maps_url ?? null,
-    googleBusinessUrl: s.google_business_url ?? null,
-    openingHours: (Array.isArray(s.opening_hours) ? s.opening_hours : []) as OpeningSlot[],
-    social: s.social_links ?? {},
+    businessName: s?.business_name ?? "Relax Sélection",
+    street: s?.address_street ?? null,
+    postalCode: s?.address_postal_code ?? null,
+    city: s?.address_city ?? "Genève",
+    country: s?.address_country ?? "CH",
+    latitude: num(s?.latitude),
+    longitude: num(s?.longitude),
+    phone: s?.phone ?? null,
+    whatsapp: s?.whatsapp ?? null,
+    email: s?.email ?? null,
+    googleMapsUrl: s?.google_maps_url ?? null,
+    googleBusinessUrl: s?.google_business_url ?? null,
+    openingHours: (Array.isArray(s?.opening_hours) ? s.opening_hours : []) as unknown as OpeningSlot[],
+    social: (s?.social_links ?? {}) as SiteSettings["social"],
     timezone: "Europe/Zurich",
-    enabledLocales: Array.isArray(s.enabled_locales) ? s.enabled_locales : ["fr"],
+    enabledLocales: s?.enabled_locales ?? ["fr"],
   };
 }

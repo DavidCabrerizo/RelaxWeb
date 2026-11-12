@@ -255,6 +255,50 @@ En local:
 
 **Aviso de Next.js 16:** Cache Components y Partial Prefetching serán obligatorios en la próxima versión mayor. Para entonces habrá que volver a revisar el código 404 de las fichas inexistentes (ver Fase 2).
 
+## Fase 4 — Panel: productos, marcas y categorías (12/11/2026)
+
+**Usuario admin:** `visualproductor@gmail.com`, con rol `admin`. Los registros públicos están desactivados en Supabase.
+
+**Rutas del panel**
+
+| Ruta | Qué permite |
+|---|---|
+| `/admin` | recuentos reales de la base de datos (sin analíticas inventadas), últimas modificaciones y accesos rápidos |
+| `/admin/productos` | listado con búsqueda (nombre FR/EN o slug) y filtros por categoría, marca y estado; publicar/despublicar y destacar con un clic |
+| `/admin/productos/nuevo`, `/admin/productos/[id]` | formulario completo con pestañas FR/EN: nombre, descripción corta y completa, características (una por línea), título SEO y metadescripción con contador; marca, categoría, slug, orden, estado y destacado |
+| `/admin/productos/[id]/apercu` | vista previa de la ficha en FR o EN, también de borradores |
+| `/admin/marcas`, `/admin/marcas/nueva`, `/admin/marcas/[id]` | CRUD, con lista de productos asociados |
+| `/admin/categorias`, `/admin/categorias/nueva`, `/admin/categorias/[id]` | CRUD, con elección de icono |
+| `/admin/contenidos`, `/admin/configuracion`, `/admin/seo` | páginas provisionales (Fases 6 y 7) |
+
+**Reglas de negocio** (aplicadas en el servidor)
+- El nombre en francés es obligatorio. El inglés es opcional, pero si se rellena cualquier campo, su nombre pasa a ser obligatorio. Si se vacía, se borra la traducción y la web muestra el francés.
+- Para publicar un producto hace falta una descripción corta en francés, tanto desde el formulario como desde el botón rápido.
+- No se puede borrar una marca o categoría con productos: el botón queda desactivado con el motivo, la acción vuelve a comprobarlo y la clave foránea `RESTRICT` lo impide en última instancia.
+- El slug se genera solo a partir del nombre en francés, se puede editar y se valida con el formato del dominio SQL. Si está repetido, se muestra un mensaje claro.
+
+**Seguridad de las escrituras**
+- Cada Server Action llama a `requireStaff()` (sesión verificada y rol) antes de tocar datos.
+- Los ids se validan como UUID y los campos se recortan a la longitud de la base de datos.
+- Escribe con la sesión del usuario, así que RLS se aplica también aquí: nunca se usa `service_role`.
+- Los errores de Postgres se traducen a mensajes comprensibles, sin mostrar detalles internos.
+- Tras cada cambio, `updateTag("content")` invalida la caché pública y la web se actualiza al instante.
+
+**Tipado:** `src/lib/supabase/database.types.ts` está generado desde el proyecto real y los tres clientes de Supabase lo usan. TypeScript comprueba cada consulta (tablas, columnas y tipos) contra el esquema real.
+
+**Pruebas**
+
+| Prueba | Resultado |
+|---|---|
+| `npm test` (slugify, lectura de formularios, validación de UUID, reglas de traducción, mensajes de error) | 6/6 |
+| Escrituras del panel en el proyecto real con la sesión del admin, dentro de una transacción deshecha: crear categoría, marca y producto con traducciones; upsert; publicar; cambiar el slug | ✓ — se generan `published_at` y la redirección; no quedan restos |
+| Usuario autenticado sin rol | modifica 0 filas |
+| `/admin/*` sin sesión | 307 → `/admin/login` |
+| Formulario renderizado en Chrome | pestañas FR/EN (los campos ocultos se siguen enviando) y contador SEO |
+
+**Pendiente de comprobar por ti:** el flujo completo en el navegador (login y guardar), porque desde este entorno no se llega a `supabase.co`.
+
 ## Siguientes fases
 
-- **Fases 4–9:** según el prompt maestro.
+- **Fase 5:** subida y gestión de imágenes (galería, imagen principal, logos de marca).
+- **Fases 6–9:** según el prompt maestro.
