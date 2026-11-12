@@ -37,6 +37,16 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
                   {s.businessName}
                   <br />
                   {s.street ? address.map((line) => <span key={line} className="block">{line}</span>) : pending}
+                  {s.googleMapsUrl && (
+                    <a
+                      href={s.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block text-sm font-semibold text-lime underline-offset-4 hover:underline"
+                    >
+                      {t.contact.viewOnMaps} ↗
+                    </a>
+                  )}
                 </dd>
               </div>
               <div>

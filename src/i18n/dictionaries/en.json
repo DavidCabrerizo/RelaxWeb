@@ -2,12 +2,30 @@
   "meta": {
     "siteTitle": "Relax Sélection — Vape, CBD, e-liquids and accessories in Geneva",
     "siteDescription": "Multi-brand shop in Geneva: vape, CBD, e-liquids and accessories. Personal advice in store, close to Carouge, Lancy and Chêne-Bourg.",
-    "products": { "title": "Products — vape, CBD, e-liquids and accessories", "description": "Browse a selection of products available in our Geneva shop: vape, CBD, e-liquids and accessories." },
-    "brands": { "title": "Our brands", "description": "The vape, CBD and e-liquid brands selected by Relax Sélection in Geneva." },
-    "about": { "title": "About the shop", "description": "Relax Sélection, vape and CBD shop in Geneva: our selection, our advice and our commitment to quality." },
-    "contact": { "title": "Contact, opening hours and directions", "description": "Address, opening hours, phone and directions to the Relax Sélection shop in Geneva." },
-    "legal": { "title": "Legal notice", "description": "Legal notice of the Relax Sélection website." },
-    "privacy": { "title": "Privacy policy", "description": "How Relax Sélection processes your personal data (Swiss FADP)." },
+    "products": {
+      "title": "Products — vape, CBD, e-liquids and accessories",
+      "description": "Browse a selection of products available in our Geneva shop: vape, CBD, e-liquids and accessories."
+    },
+    "brands": {
+      "title": "Our brands",
+      "description": "The vape, CBD and e-liquid brands selected by Relax Sélection in Geneva."
+    },
+    "about": {
+      "title": "About the shop",
+      "description": "Relax Sélection, vape and CBD shop in Geneva: our selection, our advice and our commitment to quality."
+    },
+    "contact": {
+      "title": "Contact, opening hours and directions",
+      "description": "Address, opening hours, phone and directions to the Relax Sélection shop in Geneva."
+    },
+    "legal": {
+      "title": "Legal notice",
+      "description": "Legal notice of the Relax Sélection website."
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "description": "How Relax Sélection processes your personal data (Swiss FADP)."
+    },
     "categoryTitle": "{name} in Geneva",
     "categoryDescription": "{name} available at Relax Sélection, multi-brand shop in Geneva. Advice in store."
   },
@@ -74,9 +92,18 @@
     "p2": "In store, you can try devices, compare e-liquid flavours and ask our team all your questions.",
     "valuesTitle": "Our commitment",
     "values": [
-      { "title": "Selection", "text": "Carefully chosen products that comply with Swiss regulations." },
-      { "title": "Advice", "text": "Personal guidance, without jargon." },
-      { "title": "Responsibility", "text": "Sales to adults only. No health claims." }
+      {
+        "title": "Selection",
+        "text": "Carefully chosen products that comply with Swiss regulations."
+      },
+      {
+        "title": "Advice",
+        "text": "Personal guidance, without jargon."
+      },
+      {
+        "title": "Responsibility",
+        "text": "Sales to adults only. No health claims."
+      }
     ]
   },
   "contact": {
@@ -90,7 +117,8 @@
     "mapConsent": "The Google Maps map only loads after you accept third-party cookies.",
     "mapPending": "The map will be displayed once the shop address is configured.",
     "formTitle": "Write to us",
-    "formSoon": "The contact form will be available soon. In the meantime, call us or visit the shop."
+    "formSoon": "The contact form will be available soon. In the meantime, call us or visit the shop.",
+    "viewOnMaps": "View on Google Maps"
   },
   "hours": {
     "title": "Opening hours",
@@ -99,7 +127,15 @@
     "openNow": "Open now",
     "closedNow": "Closed now",
     "closesAt": "closes at {time}",
-    "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    "days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ]
   },
   "age": {
     "title": "Adults only",

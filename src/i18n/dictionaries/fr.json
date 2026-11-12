@@ -2,12 +2,30 @@
   "meta": {
     "siteTitle": "Relax Sélection — Vape, CBD, e-liquides et accessoires à Genève",
     "siteDescription": "Boutique multimarque à Genève : vape, CBD, e-liquides et accessoires. Conseils personnalisés en magasin, à deux pas de Carouge, Lancy et Chêne-Bourg.",
-    "products": { "title": "Produits — vape, CBD, e-liquides et accessoires", "description": "Découvrez une sélection de produits disponibles en boutique à Genève : vape, CBD, e-liquides et accessoires." },
-    "brands": { "title": "Nos marques", "description": "Les marques de vape, CBD et e-liquides sélectionnées par Relax Sélection à Genève." },
-    "about": { "title": "À propos de la boutique", "description": "Relax Sélection, boutique de vape et CBD à Genève : notre sélection, nos conseils et notre engagement qualité." },
-    "contact": { "title": "Contact, horaires et itinéraire", "description": "Adresse, horaires d'ouverture, téléphone et itinéraire vers la boutique Relax Sélection à Genève." },
-    "legal": { "title": "Mentions légales", "description": "Mentions légales du site Relax Sélection." },
-    "privacy": { "title": "Politique de confidentialité", "description": "Comment Relax Sélection traite vos données personnelles (nLPD)." },
+    "products": {
+      "title": "Produits — vape, CBD, e-liquides et accessoires",
+      "description": "Découvrez une sélection de produits disponibles en boutique à Genève : vape, CBD, e-liquides et accessoires."
+    },
+    "brands": {
+      "title": "Nos marques",
+      "description": "Les marques de vape, CBD et e-liquides sélectionnées par Relax Sélection à Genève."
+    },
+    "about": {
+      "title": "À propos de la boutique",
+      "description": "Relax Sélection, boutique de vape et CBD à Genève : notre sélection, nos conseils et notre engagement qualité."
+    },
+    "contact": {
+      "title": "Contact, horaires et itinéraire",
+      "description": "Adresse, horaires d'ouverture, téléphone et itinéraire vers la boutique Relax Sélection à Genève."
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "description": "Mentions légales du site Relax Sélection."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "description": "Comment Relax Sélection traite vos données personnelles (nLPD)."
+    },
     "categoryTitle": "{name} à Genève",
     "categoryDescription": "{name} disponibles chez Relax Sélection, boutique multimarque à Genève. Conseils en magasin."
   },
@@ -74,9 +92,18 @@
     "p2": "En boutique, vous pouvez découvrir le matériel, comparer les saveurs d'e-liquides et poser toutes vos questions à notre équipe.",
     "valuesTitle": "Notre engagement",
     "values": [
-      { "title": "Sélection", "text": "Des produits choisis avec soin, conformes à la réglementation suisse." },
-      { "title": "Conseil", "text": "Un accompagnement personnalisé, sans jargon." },
-      { "title": "Responsabilité", "text": "Vente réservée aux personnes majeures. Aucune allégation de santé." }
+      {
+        "title": "Sélection",
+        "text": "Des produits choisis avec soin, conformes à la réglementation suisse."
+      },
+      {
+        "title": "Conseil",
+        "text": "Un accompagnement personnalisé, sans jargon."
+      },
+      {
+        "title": "Responsabilité",
+        "text": "Vente réservée aux personnes majeures. Aucune allégation de santé."
+      }
     ]
   },
   "contact": {
@@ -90,7 +117,8 @@
     "mapConsent": "La carte Google Maps est chargée uniquement après votre accord aux cookies tiers.",
     "mapPending": "La carte sera affichée dès que l'adresse de la boutique sera configurée.",
     "formTitle": "Nous écrire",
-    "formSoon": "Le formulaire de contact sera bientôt disponible. En attendant, appelez-nous ou passez en boutique."
+    "formSoon": "Le formulaire de contact sera bientôt disponible. En attendant, appelez-nous ou passez en boutique.",
+    "viewOnMaps": "Voir sur Google Maps"
   },
   "hours": {
     "title": "Horaires",
@@ -99,7 +127,15 @@
     "openNow": "Ouvert maintenant",
     "closedNow": "Fermé actuellement",
     "closesAt": "ferme à {time}",
-    "days": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+    "days": [
+      "Lundi",
+      "Mardi",
+      "Mercredi",
+      "Jeudi",
+      "Vendredi",
+      "Samedi",
+      "Dimanche"
+    ]
   },
   "age": {
     "title": "Accès réservé aux adultes",
