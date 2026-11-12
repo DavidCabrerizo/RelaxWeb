@@ -291,7 +291,7 @@ export const DEMO_PRODUCTS: RawProduct[] = products.map((p) => ({ ...p, isDemo: 
 
 /**
  * Datos reales de la tienda (ficha de Google Maps facilitada por el cliente) y horario de la fachada.
- * Teléfono y coordenadas: pendientes de confirmar (no se inventan).
+ * Teléfono y coordenadas confirmados por el cliente el 12/11/2026.
  */
 export const DEMO_SETTINGS: SiteSettings = {
   businessName: "Relax Sélection",
@@ -299,9 +299,9 @@ export const DEMO_SETTINGS: SiteSettings = {
   postalCode: "1205",
   city: "Genève",
   country: "CH",
-  latitude: null,
-  longitude: null,
-  phone: null,
+  latitude: 46.196782,
+  longitude: 6.146489,
+  phone: "+41 78 616 20 82",
   whatsapp: null,
   email: null,
   googleMapsUrl: "https://maps.app.goo.gl/aXxZpkXfjxKGr4JWA",
