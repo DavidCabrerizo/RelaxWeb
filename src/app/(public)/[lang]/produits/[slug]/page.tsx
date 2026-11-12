@@ -25,8 +25,10 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/produits/[
   return pageMetadata({
     locale: lang,
     path: `/produits/${p.slug}`,
-    title: `${p.name} — ${p.brand.name}`,
-    description: `${p.shortDescription} ${t.catalog.inStore} — Genève.`.slice(0, 160),
+    title: p.seoTitle || `${p.name} — ${p.brand.name}`,
+    description: p.seoDescription || `${p.shortDescription} ${t.catalog.inStore} — Genève.`,
+    absoluteTitle: Boolean(p.seoTitle),
+    image: p.images[0]?.url,
   });
 }
 

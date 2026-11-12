@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     description: t.meta.siteDescription,
     applicationName: "Relax Sélection",
     formatDetection: { telephone: false },
+    // Search Console: verificación por metaetiqueta (variable de entorno, opcional)
+    ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
   };
 }
 

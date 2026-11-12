@@ -400,6 +400,33 @@ Avisos del asesor de Supabase:
 **Pendiente**
 - **SMTP:** configurar las variables de entorno en Vercel con el correo del cliente.
 
+## Fase 7 — SEO local y Google Business Profile (12/11/2026)
+
+**Metadatos** (`src/lib/seo/metadata.ts`)
+- `pageMetadata()` centraliza título, descripción, canonical, hreflang (`fr-CH`, `en`, `x-default` → FR), Open Graph y Twitter.
+- Las páginas fijas (`STATIC_PAGES`: inicio, productos, marcas, quiénes somos, contacto, aviso legal, privacidad) aceptan textos propios por idioma y `noindex` desde **Panel → SEO** (tabla `seo_metadata`). Vacío = textos por defecto del diccionario.
+- Productos, marcas y categorías usan su `seo_title`/`seo_description` si existen; si no, se generan del nombre y la descripción. La imagen OG es la primera foto del producto o la portada de la marca.
+- Imagen OG fija en `/og.png` (route handler con `ImageResponse`, 1200×630). Se descartó `opengraph-image.tsx` en `[lang]` porque su URL con hash pasaba por la redirección de `/fr` y daba 404 en el JSON-LD.
+- Verificación de Search Console por metaetiqueta opcional: variable `GOOGLE_SITE_VERIFICATION`.
+
+**Datos estructurados** (`src/lib/seo/jsonld.ts`, serialización que escapa `<`, `>` y `&`)
+- `Store` en inicio y contacto: dirección, `geo`, teléfono, `hasMap`, `areaServed` (Genève y localidades cercanas), horario, cierres excepcionales y `sameAs` sin duplicados. Si falta un dato (coordenadas, teléfono) el campo se omite: nunca se rellena.
+- `BreadcrumbList` en todas las páginas con migas de pan.
+- `FAQPage` en contacto (6 preguntas FR/EN, también visibles en la página).
+
+**Indexación**
+- `sitemap.xml`: 54 URL con los datos de demo (27 por idioma), con `lastModified` y alternativas hreflang; excluye borradores y páginas con `noindex`.
+- `robots.txt`: permite todo salvo `/admin` y `/api/`; enlaza el sitemap.
+
+**Mapa y privacidad:** el iframe de Google Maps solo se carga con consentimiento. Sin él, la página muestra un botón «Afficher la carte» y no hace ninguna petición a Google (comprobado en Chrome). El botón «Itinéraire» enlaza a la ficha siempre.
+
+**Panel → SEO:** revisión del contenido publicado (● sin fotos o sin descripción corta FR; ○ falta traducción EN, metadescripción automática, marca sin logo…) y formulario de las páginas fijas.
+
+**Google Business Profile:** la ficha se optimiza a mano. Checklist, descripción, publicaciones, plantillas de reseñas y palabras clave en `docs/google-business-profile.md`. No se incluyen volúmenes de búsqueda: no hay datos reales; se medirán con Search Console.
+
+**Verificación:** 23/23 tests (`tests/seo.test.ts` cubre Store, breadcrumbs, FAQ y la inyección de `</script>`), `tsc`, `eslint` y build sin errores.
+
 ## Siguientes fases
 
-- **Fases 6–9:** según el prompt maestro.
+- **Fase 8:** cabeceras de seguridad y CSP, más tests, auditoría de accesibilidad y Core Web Vitals.
+- **Fase 9:** despliegue en Vercel, dominio, Search Console, manual del panel y retirada de los datos de demo.

@@ -13,13 +13,16 @@ import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { pageContext } from "@/lib/i18n/page";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { storeJsonLd } from "@/lib/seo/jsonld";
+import { siteUrl } from "@/lib/seo/site";
 import { getBlock, getBrands, getCategories, getContentImage, getProducts, getSettings } from "@/lib/content/repository";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/", title: t.meta.siteTitle, description: t.meta.siteDescription, absoluteTitle: true });
+  return pageMetadata({ locale: lang, pageKey: "home", path: "/", title: t.meta.siteTitle, description: t.meta.siteDescription, absoluteTitle: true });
 }
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
@@ -37,6 +40,15 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
+      <JsonLd
+        data={storeJsonLd(settings, {
+          baseUrl: siteUrl(),
+          url: siteUrl() + localizedPath(lang, "/"),
+          locale: lang,
+          image: settings.logoDarkUrl ?? siteUrl() + "/og.png",
+          description: t.meta.siteDescription,
+        })}
+      />
       {/* HERO */}
       <section className="relative overflow-hidden">
         {heroImage && (

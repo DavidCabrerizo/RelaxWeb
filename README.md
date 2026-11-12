@@ -2,7 +2,7 @@
 
 Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-**Estado:** Fases 1–6 completadas (arquitectura y diseño, web pública FR/EN, Supabase y panel, CRUD, imágenes, contenidos, configuración y formulario de contacto).
+**Estado:** Fases 1–7 completadas (arquitectura y diseño, web pública FR/EN, Supabase y panel, CRUD, imágenes, contenidos, configuración y formulario de contacto, SEO local y Google Business Profile).
 
 Pruebas: `npm test`.
 
@@ -40,6 +40,7 @@ Variables de entorno (Production y Preview):
 | `CONTACT_TO_EMAIL` | adonde llegan los mensajes del formulario |
 | `CONTACT_FROM_EMAIL` | remitente autorizado en ese servidor SMTP |
 | `CONTACT_RATE_SALT` | cadena larga aleatoria (sal del hash de IP) |
+| `GOOGLE_SITE_VERIFICATION` | opcional: código de la metaetiqueta de Search Console (si no se verifica por DNS) |
 
 ## Probar las políticas RLS en local (opcional)
 

@@ -8,7 +8,7 @@ import "server-only";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/i18n/config";
 import { supabaseConfigured } from "@/lib/supabase/public";
 import { DEMO_BRANDS, DEMO_CATEGORIES, DEMO_PRODUCTS, DEMO_SETTINGS } from "./demo-data";
-import { loadCatalog, loadPageContent, loadSettings, type Catalog } from "./supabase-source";
+import { loadCatalog, loadPageContent, loadSeoOverrides, loadSettings, type Catalog, type SeoOverride } from "./supabase-source";
 import { CONTENT_BLOCKS, type ContentImageKey } from "./blocks";
 import { mediaUrl } from "@/lib/supabase/public";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -34,6 +34,9 @@ const toCategory = (c: RawCategory, l: Locale): Category => ({
   icon: c.icon,
   name: pick(c.name, l),
   description: pick(c.description, l),
+  seoTitle: pick(c.seoTitle, l),
+  seoDescription: pick(c.seoDescription, l),
+  updatedAt: c.updatedAt,
 });
 
 const toBrand = (b: RawBrand, l: Locale): Brand => ({
@@ -43,6 +46,9 @@ const toBrand = (b: RawBrand, l: Locale): Brand => ({
   description: pick(b.description, l),
   logoUrl: b.logoUrl,
   coverUrl: b.coverUrl,
+  seoTitle: pick(b.seoTitle, l),
+  seoDescription: pick(b.seoDescription, l),
+  updatedAt: b.updatedAt,
 });
 
 function toProduct(p: RawProduct, cat: Catalog, l: Locale): Product {
@@ -59,6 +65,9 @@ function toProduct(p: RawProduct, cat: Catalog, l: Locale): Product {
     images: p.images.map((i) => ({ url: i.url, alt: pick(i.alt, l) })),
     brand: toBrand(brand, l),
     category: toCategory(category, l),
+    seoTitle: pick(p.seoTitle, l),
+    seoDescription: pick(p.seoDescription, l),
+    updatedAt: p.updatedAt,
   };
 }
 
@@ -165,4 +174,20 @@ export async function getBlock(key: string, locale: Locale, t: Dictionary): Prom
 /** URL pública de una imagen de contenido (home, about…), o undefined si no hay. */
 export async function getContentImage(key: ContentImageKey): Promise<string | undefined> {
   return mediaUrl((await pageContent())[key]?.[DEFAULT_LOCALE]?.path);
+}
+
+/** SEO editado para una página fija (home, products, brands, about, contact, legal, privacy). */
+export async function getSeoOverride(pageKey: string, locale: Locale): Promise<SeoOverride | undefined> {
+  if (!supabaseConfigured()) return undefined;
+  return (await loadSeoOverrides())[`${pageKey}|${locale}`];
+}
+
+/** Datos para el sitemap: slugs con su fecha de última modificación. */
+export async function getSitemapEntries() {
+  const cat = await catalog();
+  return {
+    products: cat.products.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt })),
+    brands: cat.brands.map((b) => ({ slug: b.slug, updatedAt: b.updatedAt })),
+    categories: cat.categories.map((c) => ({ slug: c.slug, updatedAt: c.updatedAt })),
+  };
 }

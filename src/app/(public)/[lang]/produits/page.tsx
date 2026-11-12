@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/produits">
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
   // Las vistas filtradas (?categorie=…) comparten canonical con /produits: sin contenido duplicado.
-  return pageMetadata({ locale: lang, path: "/produits", ...t.meta.products });
+  return pageMetadata({ locale: lang, pageKey: "products", path: "/produits", ...t.meta.products });
 }
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);

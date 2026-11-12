@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/a-propos">
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/a-propos", ...t.meta.about });
+  return pageMetadata({ locale: lang, pageKey: "about", path: "/a-propos", ...t.meta.about });
 }
 
 /** Textos e imagen editables desde /admin/contenidos (bloque "about" e imagen "images.about"). */

@@ -46,17 +46,17 @@ export async function loadCatalog(): Promise<Catalog> {
   const [cats, brands, products, redirects] = await Promise.all([
     db
       .from("categories")
-      .select("id, slug, icon, sort_order, category_translations(locale, name, description)")
+      .select("id, slug, icon, sort_order, updated_at, category_translations(locale, name, description, seo_title, seo_description)")
       .order("sort_order"),
     db
       .from("brands")
-      .select("id, slug, logo_path, cover_path, is_featured, sort_order, brand_translations(locale, name, description)")
+      .select("id, slug, logo_path, cover_path, is_featured, sort_order, updated_at, brand_translations(locale, name, description, seo_title, seo_description)")
       .order("sort_order"),
     db
       .from("products")
       .select(
-        "slug, is_featured, sort_order, brand_id, category_id," +
-          " product_translations(locale, name, short_description, description, features)," +
+        "slug, is_featured, sort_order, brand_id, category_id, updated_at," +
+          " product_translations(locale, name, short_description, description, features, seo_title, seo_description)," +
           " product_images(storage_path, alt, is_primary, sort_order)",
       )
       .order("sort_order"),
@@ -78,6 +78,9 @@ export async function loadCatalog(): Promise<Catalog> {
       sortOrder: c.sort_order,
       name,
       description: localized(c.category_translations as Tr[], "description"),
+      seoTitle: localized(c.category_translations as Tr[], "seo_title"),
+      seoDescription: localized(c.category_translations as Tr[], "seo_description"),
+      updatedAt: c.updated_at,
     };
     catById.set(c.id, raw);
     categories.push(raw);
@@ -96,6 +99,9 @@ export async function loadCatalog(): Promise<Catalog> {
       description: localized(b.brand_translations as Tr[], "description"),
       logoUrl: mediaUrl(b.logo_path),
       coverUrl: mediaUrl(b.cover_path),
+      seoTitle: localized(b.brand_translations as Tr[], "seo_title"),
+      seoDescription: localized(b.brand_translations as Tr[], "seo_description"),
+      updatedAt: b.updated_at,
     };
     brandById.set(b.id, raw);
     brandList.push(raw);
@@ -107,6 +113,7 @@ export async function loadCatalog(): Promise<Catalog> {
     sort_order: number;
     brand_id: string | null;
     category_id: string | null;
+    updated_at: string;
     product_translations: Tr[];
     product_images: { storage_path: string; alt: Record<string, string>; is_primary: boolean; sort_order: number }[];
   };
@@ -133,6 +140,9 @@ export async function loadCatalog(): Promise<Catalog> {
       description: localized(p.product_translations, "description") ?? { fr: "" },
       features: localized<string[]>(p.product_translations, "features") ?? { fr: [] },
       images,
+      seoTitle: localized(p.product_translations, "seo_title"),
+      seoDescription: localized(p.product_translations, "seo_description"),
+      updatedAt: p.updated_at,
     });
   }
 
@@ -193,4 +203,18 @@ export async function loadPageContent(): Promise<Record<string, Record<string, R
     (out[row.key] ??= {})[row.locale] = clean;
   }
   return out;
+}
+
+export type SeoOverride = { title?: string; description?: string; noindex: boolean };
+
+/** SEO de las páginas fijas editado en /admin/seo: { "home|fr": {...}, ... } */
+export async function loadSeoOverrides(): Promise<Record<string, SeoOverride>> {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("hours");
+  const { data, error } = await createPublicClient().from("seo_metadata").select("page_key, locale, title, description, noindex");
+  if (error) throw new Error(`Supabase: ${error.message}`);
+  return Object.fromEntries(
+    (data ?? []).map((r) => [`${r.page_key}|${r.locale}`, { title: r.title ?? undefined, description: r.description ?? undefined, noindex: r.noindex }]),
+  );
 }

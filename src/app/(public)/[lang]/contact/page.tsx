@@ -4,6 +4,12 @@ import { OpeningHours } from "@/components/store/OpeningHours";
 import { OpenNowBadge } from "@/components/store/OpenNowBadge";
 import { SpecialDays } from "@/components/store/SpecialDays";
 import { ContactForm } from "@/components/store/ContactForm";
+import { MapEmbed } from "@/components/store/MapEmbed";
+import { Faq } from "@/components/store/Faq";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { storeJsonLd } from "@/lib/seo/jsonld";
+import { siteUrl } from "@/lib/seo/site";
+import { fmt } from "@/lib/i18n/format";
 import { localizedPath } from "@/lib/i18n/config";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -15,13 +21,14 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/contact">)
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/contact", ...t.meta.contact });
+  return pageMetadata({ locale: lang, pageKey: "contact", path: "/contact", ...t.meta.contact });
 }
 
 export default async function ContactPage({ params }: PageProps<"/[lang]/contact">) {
   const { lang, t } = await pageContext(params);
   const s = await getSettings();
   const address = [s.street, [s.postalCode, s.city].filter(Boolean).join(" ")].filter(Boolean);
+  const fullAddress = address.join(", ");
   const pending = <span className="text-muted-dark">{t.contact.pending}</span>;
 
   return (
@@ -84,11 +91,36 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
 
           <section aria-labelledby="h-map" className="rounded-[var(--radius-card)] border border-line-dark bg-ink-2 p-6">
             <h2 id="h-map" className="font-extrabold uppercase tracking-wider">{t.contact.mapTitle}</h2>
-            {/* El mapa incrustado (cargado solo con consentimiento) se integra en la Fase 7 */}
-            <p className="mt-2 text-sm text-muted-dark">{s.street ? t.contact.mapConsent : t.contact.mapPending}</p>
+            <div className="mt-4">
+              {s.street || s.latitude != null ? (
+                <MapEmbed
+                  lat={s.latitude}
+                  lng={s.longitude}
+                  query={[s.businessName, s.street, s.postalCode, s.city].filter(Boolean).join(", ")}
+                  locale={lang}
+                  labels={t.contact.map}
+                />
+              ) : (
+                <p className="text-sm text-muted-dark">{t.contact.mapPending}</p>
+              )}
+            </div>
           </section>
         </div>
       </div>
+
+      <Faq
+        title={t.faq.title}
+        items={t.faq.items.map((it) => ({ q: it.q, a: fmt(it.a, { address: fullAddress || s.city }) }))}
+      />
+      <JsonLd
+        data={storeJsonLd(s, {
+          baseUrl: siteUrl(),
+          url: siteUrl() + localizedPath(lang, "/contact"),
+          locale: lang,
+          image: s.logoDarkUrl ?? siteUrl() + "/og.png",
+          description: t.meta.siteDescription,
+        })}
+      />
     </>
   );
 }

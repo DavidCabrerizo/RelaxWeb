@@ -137,6 +137,11 @@
         "rate": "Trop de messages envoyés. Merci de réessayer plus tard ou de nous appeler.",
         "unavailable": "Le formulaire est momentanément indisponible. Merci de nous appeler ou de passer en boutique."
       }
+    },
+    "map": {
+      "show": "Afficher la carte",
+      "notice": "La carte est fournie par Google Maps. En l'affichant, vous acceptez le dépôt de cookies par Google.",
+      "title": "Carte Google Maps de la boutique"
     }
   },
   "hours": {
@@ -192,5 +197,34 @@
     "title": "Page introuvable",
     "text": "La page que vous cherchez n'existe pas ou a été déplacée.",
     "back": "Retour à l'accueil"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": [
+      {
+        "q": "Où se trouve la boutique Relax Sélection ?",
+        "a": "Au {address}. Utilisez le bouton « Itinéraire » pour obtenir le trajet depuis Carouge, Lancy, Chêne-Bourg ou ailleurs."
+      },
+      {
+        "q": "Quels sont vos horaires ?",
+        "a": "Nos horaires à jour, y compris les fermetures exceptionnelles, sont indiqués sur cette page et sur notre fiche Google."
+      },
+      {
+        "q": "Vendez-vous en ligne ?",
+        "a": "Non. Ce site présente une sélection de produits à titre informatif ; ils sont disponibles en boutique. Appelez-nous pour vérifier une disponibilité."
+      },
+      {
+        "q": "Faut-il être majeur pour acheter ?",
+        "a": "Oui. La vente de produits de vapotage et de CBD est réservée aux personnes de 18 ans et plus. Une pièce d'identité peut vous être demandée en boutique."
+      },
+      {
+        "q": "Le CBD est-il légal en Suisse ?",
+        "a": "Oui, les produits au CBD dont la teneur en THC est inférieure à 1 % sont autorisés en Suisse. Nous ne faisons aucune allégation thérapeutique."
+      },
+      {
+        "q": "Pouvez-vous me conseiller ?",
+        "a": "Oui. Notre équipe vous aide à choisir votre matériel, vos e-liquides ou vos produits CBD, que vous débutiez ou non."
+      }
+    ]
   }
 }

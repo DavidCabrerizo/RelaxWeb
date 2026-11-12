@@ -137,6 +137,11 @@
         "rate": "Too many messages sent. Please try again later or call us.",
         "unavailable": "The form is temporarily unavailable. Please call us or visit the shop."
       }
+    },
+    "map": {
+      "show": "Show the map",
+      "notice": "The map is provided by Google Maps. By showing it, you accept cookies set by Google.",
+      "title": "Google Maps map of the shop"
     }
   },
   "hours": {
@@ -192,5 +197,34 @@
     "title": "Page not found",
     "text": "The page you are looking for does not exist or has been moved.",
     "back": "Back to home"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": [
+      {
+        "q": "Where is the Relax Sélection shop?",
+        "a": "At {address}. Use the “Directions” button to get your route from Carouge, Lancy, Chêne-Bourg or elsewhere."
+      },
+      {
+        "q": "What are your opening hours?",
+        "a": "Our up-to-date opening hours, including special closures, are shown on this page and on our Google listing."
+      },
+      {
+        "q": "Do you sell online?",
+        "a": "No. This website presents a selection of products for information only; they are available in store. Call us to check availability."
+      },
+      {
+        "q": "Do I need to be an adult to buy?",
+        "a": "Yes. The sale of vaping and CBD products is restricted to people aged 18 and over. You may be asked for ID in store."
+      },
+      {
+        "q": "Is CBD legal in Switzerland?",
+        "a": "Yes, CBD products with a THC content below 1% are permitted in Switzerland. We make no therapeutic claims."
+      },
+      {
+        "q": "Can you advise me?",
+        "a": "Yes. Our team helps you choose your device, e-liquids or CBD products, whether you are a beginner or not."
+      }
+    ]
   }
 }

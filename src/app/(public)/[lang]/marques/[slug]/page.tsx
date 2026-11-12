@@ -23,8 +23,10 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/marques/[s
   return pageMetadata({
     locale: lang,
     path: `/marques/${b.slug}`,
-    title: `${b.name} — ${t.nav.brands}`,
-    description: (b.description ?? t.meta.brands.description).slice(0, 160),
+    title: b.seoTitle || `${b.name} — ${t.nav.brands}`,
+    description: b.seoDescription || b.description || t.meta.brands.description,
+    absoluteTitle: Boolean(b.seoTitle),
+    image: b.coverUrl ?? b.logoUrl,
   });
 }
 

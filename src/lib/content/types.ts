@@ -11,6 +11,9 @@ export type RawCategory = {
   sortOrder: number;
   name: Localized;
   description?: Localized;
+  seoTitle?: Localized;
+  seoDescription?: Localized;
+  updatedAt?: string;
 };
 
 export type RawBrand = {
@@ -21,6 +24,9 @@ export type RawBrand = {
   description?: Localized;
   logoUrl?: string;
   coverUrl?: string;
+  seoTitle?: Localized;
+  seoDescription?: Localized;
+  updatedAt?: string;
 };
 
 export type RawProduct = {
@@ -35,12 +41,16 @@ export type RawProduct = {
   description: Localized;
   features: Localized<string[]>;
   images: { url: string; alt: Localized }[];
+  seoTitle?: Localized;
+  seoDescription?: Localized;
+  updatedAt?: string;
 };
 
 // ---- Forma "resuelta" para un idioma (lo que reciben los componentes) ----
-export type Category = { slug: string; icon: CategoryIconName; name: string; description?: string };
-export type Brand = { slug: string; isFeatured: boolean; name: string; description?: string; logoUrl?: string; coverUrl?: string };
-export type Product = {
+type Seo = { seoTitle?: string; seoDescription?: string; updatedAt?: string };
+export type Category = { slug: string; icon: CategoryIconName; name: string; description?: string } & Seo;
+export type Brand = { slug: string; isFeatured: boolean; name: string; description?: string; logoUrl?: string; coverUrl?: string } & Seo;
+export type Product = Seo & {
   slug: string;
   isFeatured: boolean;
   isDemo: boolean;

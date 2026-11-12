@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/confidenti
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/confidentialite", ...t.meta.privacy });
+  return pageMetadata({ locale: lang, pageKey: "privacy", path: "/confidentialite", ...t.meta.privacy });
 }
 
 export default async function PrivacyPage({ params }: PageProps<"/[lang]/confidentialite">) {

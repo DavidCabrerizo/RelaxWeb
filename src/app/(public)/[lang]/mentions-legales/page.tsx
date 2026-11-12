@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/mentions-l
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/mentions-legales", ...t.meta.legal });
+  return pageMetadata({ locale: lang, pageKey: "legal", path: "/mentions-legales", ...t.meta.legal });
 }
 
 export default async function LegalNoticePage({ params }: PageProps<"/[lang]/mentions-legales">) {

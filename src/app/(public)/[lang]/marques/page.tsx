@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/marques">)
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = await getDictionary(lang);
-  return pageMetadata({ locale: lang, path: "/marques", ...t.meta.brands });
+  return pageMetadata({ locale: lang, pageKey: "brands", path: "/marques", ...t.meta.brands });
 }
 
 export default async function BrandsPage({ params }: PageProps<"/[lang]/marques">) {

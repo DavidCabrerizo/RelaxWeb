@@ -24,8 +24,9 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/categories
   return pageMetadata({
     locale: lang,
     path: `/categories/${c.slug}`,
-    title: fmt(t.meta.categoryTitle, { name: c.name }),
-    description: fmt(t.meta.categoryDescription, { name: c.name }),
+    title: c.seoTitle || fmt(t.meta.categoryTitle, { name: c.name }),
+    description: c.seoDescription || fmt(t.meta.categoryDescription, { name: c.name }),
+    absoluteTitle: Boolean(c.seoTitle),
   });
 }
 

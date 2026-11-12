@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
+import { siteUrl } from "@/lib/seo/site";
 
 type Crumb = { label: string; path?: string };
 
-/** Fil d'Ariane visible. El BreadcrumbList en JSON-LD se añade en la Fase 7. */
+/** Fil d'Ariane visible + BreadcrumbList en JSON-LD. */
 export function Breadcrumbs({ locale, items, label }: { locale: Locale; items: Crumb[]; label: string }) {
+  const base = siteUrl();
   return (
     <nav aria-label={label} className="text-xs text-muted-dark">
+      <JsonLd data={breadcrumbJsonLd(items.map((c) => ({ name: c.label, url: c.path ? base + localizedPath(locale, c.path) : undefined })))} />
       <ol className="flex flex-wrap items-center gap-1.5">
         {items.map((c, i) => (
           <li key={i} className="flex items-center gap-1.5">
