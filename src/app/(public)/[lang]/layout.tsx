@@ -5,7 +5,7 @@ import "../../globals.css";
 import { HTML_LANG, isLocale, localizedPath } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getEnabledLocales } from "@/lib/site/defaults";
-import { getCategories, getSettings } from "@/lib/content/repository";
+import { getBlock, getCategories, getSettings } from "@/lib/content/repository";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AgeGate } from "@/components/legal/AgeGate";
@@ -34,16 +34,17 @@ export default async function PublicRootLayout({ children, params }: LayoutProps
   const { lang } = await params;
   if (!isLocale(lang) || !(await getEnabledLocales()).includes(lang)) notFound();
 
-  const [t, settings, categories] = await Promise.all([getDictionary(lang), getSettings(), getCategories(lang)]);
+  const t = await getDictionary(lang);
+  const [settings, categories, footer] = await Promise.all([getSettings(), getCategories(lang), getBlock("footer", lang, t)]);
 
   return (
     <html lang={HTML_LANG[lang]} className={`${montserrat.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col bg-ink font-sans text-paper">
-        <Header locale={lang} t={t} />
+        <Header locale={lang} t={t} logoUrl={settings.logoDarkUrl} />
         <main id="contenu" className="flex-1">
           {children}
         </main>
-        <Footer locale={lang} t={t} settings={settings} categories={categories} />
+        <Footer locale={lang} t={t} settings={settings} categories={categories} tagline={footer.tagline} />
         <AgeGate labels={t.age} />
         <CookieBanner labels={t.cookies} privacyHref={localizedPath(lang, "/confidentialite")} />
       </body>

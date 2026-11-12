@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { Waves } from "@/components/brand/Waves";
+import { getBlock, getContentImage } from "@/lib/content/repository";
 import { ButtonLink } from "@/components/ui/Button";
 import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
 import { isLocale, localizedPath } from "@/lib/i18n/config";
@@ -13,27 +15,31 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/a-propos">
   return pageMetadata({ locale: lang, path: "/a-propos", ...t.meta.about });
 }
 
-/** Textos provisionales: en la Fase 6 pasan a editarse desde /admin/contenidos (page_content "about.*"). */
+/** Textos e imagen editables desde /admin/contenidos (bloque "about" e imagen "images.about"). */
 export default async function AboutPage({ params }: PageProps<"/[lang]/a-propos">) {
   const { lang, t } = await pageContext(params);
+  const [about, photo] = await Promise.all([getBlock("about", lang, t), getContentImage("images.about")]);
 
   return (
     <>
-      <PageHeader title={t.about.title} intro={t.about.lead}>
+      <PageHeader title={t.about.title} intro={about.lead}>
         <Breadcrumbs locale={lang} label={t.common.breadcrumb} items={[{ label: t.common.home, path: "/" }, { label: t.nav.about }]} />
       </PageHeader>
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[1.2fr_1fr]">
         <div className="space-y-5 text-lg leading-relaxed text-paper/85">
-          <p>{t.about.p1}</p>
-          <p>{t.about.p2}</p>
+          <p className="whitespace-pre-line">{about.p1}</p>
+          <p className="whitespace-pre-line">{about.p2}</p>
           <ButtonLink href={localizedPath(lang, "/contact")} className="mt-4">
             {t.cta.visitUs}
           </ButtonLink>
         </div>
-        {/* Hueco para la foto de la tienda (subida desde el admin en la Fase 6) */}
         <div className="relative flex aspect-[4/3] items-end overflow-hidden rounded-[var(--radius-card)] border border-line-dark bg-ink-2">
-          <Waves className="h-24 w-full" />
+          {photo ? (
+            <Image src={photo} alt={t.about.title} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+          ) : (
+            <Waves className="h-24 w-full" />
+          )}
         </div>
       </div>
 

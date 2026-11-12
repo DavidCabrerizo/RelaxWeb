@@ -2,7 +2,7 @@
 
 Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-**Estado:** Fases 1–5 completadas (arquitectura y diseño, web pública FR/EN, Supabase y acceso al panel, CRUD de productos, marcas y categorías, gestión de imágenes).
+**Estado:** Fases 1–6 completadas (arquitectura y diseño, web pública FR/EN, Supabase y panel, CRUD, imágenes, contenidos, configuración y formulario de contacto).
 
 Pruebas: `npm test`.
 
@@ -36,6 +36,10 @@ Variables de entorno (Production y Preview):
 | `NEXT_PUBLIC_SITE_URL` | URL pública (sin barra final) |
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://cxcphxxgwymvegjpnjrj.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | la clave `sb_publishable_…` del proyecto |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | servidor de correo del cliente (465 = TLS, 587 = STARTTLS) |
+| `CONTACT_TO_EMAIL` | adonde llegan los mensajes del formulario |
+| `CONTACT_FROM_EMAIL` | remitente autorizado en ese servidor SMTP |
+| `CONTACT_RATE_SALT` | cadena larga aleatoria (sal del hash de IP) |
 
 ## Probar las políticas RLS en local (opcional)
 

@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Logo } from "@/components/brand/Logo";
+import { SiteLogo } from "@/components/brand/SiteLogo";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { getEnabledLocales } from "@/lib/site/defaults";
 import { HeaderNav } from "./HeaderNav";
 
-export async function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
+export async function Header({ locale, t, logoUrl }: { locale: Locale; t: Dictionary; logoUrl?: string }) {
   const items = [
     { path: "/produits", label: t.nav.products },
     { path: "/marques", label: t.nav.brands },
@@ -24,7 +24,7 @@ export async function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
       </a>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Link href={localizedPath(locale, "/")} className="shrink-0" aria-label={`Relax Sélection — ${t.nav.home}`}>
-          <Logo showTagline={false} className="h-9 w-auto" title="Relax Sélection" />
+          <SiteLogo url={logoUrl} showTagline={false} className="h-9 w-auto max-w-[160px]" />
         </Link>
         <HeaderNav
           locale={locale}

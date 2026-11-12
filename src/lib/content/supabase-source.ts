@@ -2,7 +2,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { createPublicClient, mediaUrl } from "@/lib/supabase/public";
 import { CATEGORY_ICONS, type CategoryIconName } from "@/components/brand/CategoryIcon";
-import type { Localized, OpeningSlot, RawBrand, RawCategory, RawProduct, SiteSettings } from "./types";
+import type { Localized, OpeningSlot, RawBrand, RawCategory, RawProduct, SiteSettings, SpecialDay } from "./types";
 
 /**
  * Lectura del contenido público desde Supabase, convertido a las mismas formas "Raw*"
@@ -168,8 +168,29 @@ export async function loadSettings(): Promise<SiteSettings & { enabledLocales: s
     googleMapsUrl: s?.google_maps_url ?? null,
     googleBusinessUrl: s?.google_business_url ?? null,
     openingHours: (Array.isArray(s?.opening_hours) ? s.opening_hours : []) as unknown as OpeningSlot[],
+    specialHours: (Array.isArray(s?.special_hours) ? s.special_hours : []) as unknown as SpecialDay[],
     social: (s?.social_links ?? {}) as SiteSettings["social"],
+    logoDarkUrl: mediaUrl(s?.logo_dark_path),
+    logoLightUrl: mediaUrl(s?.logo_light_path),
     timezone: "Europe/Zurich",
     enabledLocales: s?.enabled_locales ?? ["fr"],
   };
+}
+
+/** Bloques de page_content: { "home.hero": { fr: {...}, en: {...} }, ... } */
+export async function loadPageContent(): Promise<Record<string, Record<string, Record<string, string>>>> {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("hours");
+
+  const { data, error } = await createPublicClient().from("page_content").select("key, locale, content");
+  if (error) throw new Error(`Supabase: ${error.message}`);
+  const out: Record<string, Record<string, Record<string, string>>> = {};
+  for (const row of data ?? []) {
+    const content = (row.content && typeof row.content === "object" && !Array.isArray(row.content) ? row.content : {}) as Record<string, unknown>;
+    const clean: Record<string, string> = {};
+    for (const [k, v] of Object.entries(content)) if (typeof v === "string" && v.trim()) clean[k] = v;
+    (out[row.key] ??= {})[row.locale] = clean;
+  }
+  return out;
 }

@@ -1,4 +1,4 @@
-import type { OpeningSlot } from "@/lib/content/types";
+import type { OpeningSlot, SpecialDay } from "@/lib/content/types";
 
 /** Día (1 = lunes … 7 = domingo) y minutos del día en una zona horaria. */
 export function zonedNow(timezone: string, now = new Date()) {
@@ -19,10 +19,32 @@ const toMin = (hhmm: string) => {
   return h * 60 + m;
 };
 
-export function openStatus(slots: OpeningSlot[], timezone: string, now = new Date()) {
+/** Fecha local (YYYY-MM-DD) en la zona horaria de la tienda. */
+export function zonedDate(timezone: string, now = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+}
+
+/**
+ * ¿Abierto ahora? Un día excepcional (festivo, inventario…) tiene prioridad sobre el horario semanal:
+ * cerrado todo el día, o abierto solo en su franja open–close.
+ */
+export function openStatus(slots: OpeningSlot[], timezone: string, now = new Date(), special: SpecialDay[] = []) {
   const { day, minutes } = zonedNow(timezone, now);
+  const today = special.find((d) => d.date === zonedDate(timezone, now));
+  if (today) {
+    if (today.closed || !today.open || !today.close) return { open: false as const, note: today.note };
+    return minutes >= toMin(today.open) && minutes < toMin(today.close)
+      ? { open: true as const, closesAt: today.close, note: today.note }
+      : { open: false as const, note: today.note };
+  }
   const slot = slots.find((s) => s.day === day && minutes >= toMin(s.open) && minutes < toMin(s.close));
   return slot ? { open: true as const, closesAt: slot.close } : { open: false as const };
+}
+
+/** Días excepcionales de hoy en adelante, ordenados. */
+export function upcomingSpecialDays(special: SpecialDay[], timezone: string, now = new Date(), limit = 6) {
+  const today = zonedDate(timezone, now);
+  return special.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date)).slice(0, limit);
 }
 
 /** "10:00" → "10h00" en francés, "10:00" en inglés. */

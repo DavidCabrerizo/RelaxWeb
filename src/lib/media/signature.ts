@@ -39,3 +39,19 @@ export function isProductImagePath(path: string, productId: string): boolean {
 export function isBrandImagePath(path: string, brandId: string, kind: "logo" | "cover"): boolean {
   return new RegExp(`^brands/${brandId}/${kind}-${UUID}\\.(webp|jpg|png|avif)$`).test(path);
 }
+
+/**
+ * Imágenes de contenido y de la web:
+ *   content/{home_hero|about}-{uuid}.{ext}
+ *   site/logo-{dark|light}-{uuid}.{ext}
+ */
+export const CONTENT_IMAGE_SLOTS = ["home_hero", "about"] as const;
+export type ContentImageSlot = (typeof CONTENT_IMAGE_SLOTS)[number];
+
+export function isContentImagePath(path: string, slot: ContentImageSlot): boolean {
+  return (CONTENT_IMAGE_SLOTS as readonly string[]).includes(slot) && new RegExp(`^content/${slot}-${UUID}\\.(webp|jpg|png|avif)$`).test(path);
+}
+
+export function isSiteLogoPath(path: string, variant: "dark" | "light"): boolean {
+  return (variant === "dark" || variant === "light") && new RegExp(`^site/logo-${variant}-${UUID}\\.(webp|jpg|png|avif)$`).test(path);
+}

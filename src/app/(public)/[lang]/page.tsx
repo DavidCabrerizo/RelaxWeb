@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Logo } from "@/components/brand/Logo";
+import Image from "next/image";
+import { SiteLogo } from "@/components/brand/SiteLogo";
 import { Waves } from "@/components/brand/Waves";
 import { CategoryIcon } from "@/components/brand/CategoryIcon";
 import { ButtonLink } from "@/components/ui/Button";
@@ -12,7 +13,7 @@ import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { pageContext } from "@/lib/i18n/page";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getBrands, getCategories, getProducts, getSettings } from "@/lib/content/repository";
+import { getBlock, getBrands, getCategories, getContentImage, getProducts, getSettings } from "@/lib/content/repository";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -23,24 +24,34 @@ export async function generateMetadata({ params }: PageProps<"/[lang]">) {
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const { lang, t } = await pageContext(params);
-  const [categories, featured, brands, settings] = await Promise.all([
+  const [categories, featured, brands, settings, hero, featuredText, visit, heroImage] = await Promise.all([
     getCategories(lang),
     getProducts(lang, { featuredOnly: true, limit: 4 }),
     getBrands(lang, { featuredOnly: true }),
     getSettings(),
+    getBlock("home.hero", lang, t),
+    getBlock("home.featured", lang, t),
+    getBlock("home.visit", lang, t),
+    getContentImage("images.home_hero"),
   ]);
 
   return (
     <>
       {/* HERO */}
       <section className="relative overflow-hidden">
+        {heroImage && (
+          <>
+            <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover" />
+            <div aria-hidden="true" className="absolute inset-0 bg-ink/80" />
+          </>
+        )}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_70%_20%,rgb(126_244_36/0.14),transparent_70%)]"
         />
         <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-36 pt-12 text-center sm:pb-48 sm:pt-20">
           <h1 className="sr-only">{t.meta.siteTitle}</h1>
-          <Logo className="w-full max-w-[460px] animate-rise" />
+          <SiteLogo url={settings.logoDarkUrl} priority className="h-auto w-full max-w-[460px] animate-rise" />
           <p className="eyebrow mt-8 text-muted-dark">
             {categories.map((c, i) => (
               <span key={c.slug} className="whitespace-nowrap">
@@ -49,9 +60,9 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               </span>
             ))}
           </p>
-          <p className="mt-6 max-w-xl text-base text-muted-dark sm:text-lg">{t.home.heroText}</p>
+          <p className="mt-6 max-w-xl text-base text-muted-dark sm:text-lg">{hero.text}</p>
           <div className="mt-6">
-            <OpenNowBadge slots={settings.openingHours} timezone={settings.timezone} locale={lang} labels={t.hours} />
+            <OpenNowBadge slots={settings.openingHours} special={settings.specialHours} timezone={settings.timezone} locale={lang} labels={t.hours} />
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <ButtonLink href={localizedPath(lang, "/produits")}>{t.cta.seeProducts}</ButtonLink>
@@ -84,11 +95,11 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       </section>
 
       {/* PRODUCTOS DESTACADOS */}
-      <section className="py-16 sm:py-20" aria-label={t.home.featuredTitle}>
+      <section className="py-16 sm:py-20" aria-label={featuredText.title}>
         <div className="mx-auto max-w-6xl px-4">
           <SectionTitle
-            title={t.home.featuredTitle}
-            text={t.home.featuredText}
+            title={featuredText.title}
+            text={featuredText.text}
             action={<ButtonLink href={localizedPath(lang, "/produits")} variant="ghost">{t.cta.seeAll} →</ButtonLink>}
           />
           <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -124,8 +135,8 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <section className="pb-8 pt-16 sm:pt-20" aria-labelledby="h-visit">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-2">
           <div>
-            <h2 id="h-visit" className="display text-2xl sm:text-3xl">{t.home.visitTitle}</h2>
-            <p className="mt-3 max-w-md text-muted-dark">{t.home.visitText}</p>
+            <h2 id="h-visit" className="display text-2xl sm:text-3xl">{visit.title}</h2>
+            <p className="mt-3 max-w-md whitespace-pre-line text-muted-dark">{visit.text}</p>
             <ContactActions settings={settings} t={t} className="mt-6" />
             <p className="eyebrow mt-10 text-lime">{t.home.areasTitle}</p>
             <p className="mt-2 max-w-md text-sm text-muted-dark">{t.home.areas}</p>

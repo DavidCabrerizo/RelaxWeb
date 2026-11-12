@@ -307,6 +307,7 @@ export const DEMO_SETTINGS: SiteSettings = {
   googleMapsUrl: "https://maps.app.goo.gl/aXxZpkXfjxKGr4JWA",
   googleBusinessUrl: "https://maps.app.goo.gl/aXxZpkXfjxKGr4JWA",
   openingHours: [1, 2, 3, 4, 5, 6].map((day) => ({ day, open: "10:00", close: "19:00" })),
+  specialHours: [],
   social: {},
   timezone: "Europe/Zurich",
 };

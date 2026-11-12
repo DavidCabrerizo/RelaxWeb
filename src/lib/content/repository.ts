@@ -8,7 +8,10 @@ import "server-only";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/i18n/config";
 import { supabaseConfigured } from "@/lib/supabase/public";
 import { DEMO_BRANDS, DEMO_CATEGORIES, DEMO_PRODUCTS, DEMO_SETTINGS } from "./demo-data";
-import { loadCatalog, loadSettings, type Catalog } from "./supabase-source";
+import { loadCatalog, loadPageContent, loadSettings, type Catalog } from "./supabase-source";
+import { CONTENT_BLOCKS, type ContentImageKey } from "./blocks";
+import { mediaUrl } from "@/lib/supabase/public";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Brand, Category, Localized, Product, RawBrand, RawCategory, RawProduct, SiteSettings } from "./types";
 
 /** Texto en el idioma pedido, con el francés como respaldo. */
@@ -135,4 +138,31 @@ export async function getAllSlugs() {
     brands: cat.brands.map((b) => b.slug),
     categories: cat.categories.map((c) => c.slug),
   };
+}
+
+type PageContent = Record<string, Record<string, Record<string, string>>>;
+async function pageContent(): Promise<PageContent> {
+  return supabaseConfigured() ? loadPageContent() : {};
+}
+
+/**
+ * Textos de un bloque editable para un idioma.
+ * Por campo: texto guardado en ese idioma → texto por defecto del diccionario de ese idioma.
+ * (No se muestra un texto francés personalizado en la versión inglesa.)
+ */
+export async function getBlock(key: string, locale: Locale, t: Dictionary): Promise<Record<string, string>> {
+  const def = CONTENT_BLOCKS.find((b) => b.key === key);
+  const defaults = def ? def.defaults(t) : {};
+  const stored = (await pageContent())[key] ?? {};
+  const out: Record<string, string> = { ...defaults };
+  for (const field of Object.keys(defaults)) {
+    const v = stored[locale]?.[field];
+    if (v) out[field] = v;
+  }
+  return out;
+}
+
+/** URL pública de una imagen de contenido (home, about…), o undefined si no hay. */
+export async function getContentImage(key: ContentImageKey): Promise<string | undefined> {
+  return mediaUrl((await pageContent())[key]?.[DEFAULT_LOCALE]?.path);
 }

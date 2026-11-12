@@ -59,7 +59,8 @@ export const PRIVACY_POLICY: Localized<Section[]> = {
     {
       title: "Données traitées",
       body: [
-        "Formulaire de contact : nom, e-mail et message, utilisés uniquement pour vous répondre et non conservés au-delà du nécessaire.",
+        "Formulaire de contact : nom, e-mail et message, transmis par e-mail à la boutique uniquement pour vous répondre. Ils ne sont pas enregistrés dans une base de données du site.",
+        "Protection anti-abus du formulaire : une empreinte chiffrée (non réversible) de votre adresse IP est conservée 24 heures au maximum.",
         "Journaux techniques de l'hébergeur (adresse IP, date, page consultée) pour la sécurité du site.",
       ],
     },
@@ -81,7 +82,8 @@ export const PRIVACY_POLICY: Localized<Section[]> = {
     {
       title: "Data processed",
       body: [
-        "Contact form: name, email and message, used only to reply to you and not kept longer than necessary.",
+        "Contact form: name, email and message, sent by email to the shop only to reply to you. They are not stored in any website database.",
+        "Form abuse protection: an encrypted, non-reversible fingerprint of your IP address is kept for 24 hours at most.",
         "Hosting provider technical logs (IP address, date, page visited) for website security.",
       ],
     },

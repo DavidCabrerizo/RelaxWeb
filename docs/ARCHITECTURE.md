@@ -343,6 +343,54 @@ En local:
 
 Supabase impide borrar archivos con SQL directo (solo con su API de Storage, que es la que usa el panel), así que el borrado se probará en el navegador.
 
+## Fase 6 — Contenidos, configuración y contacto (12/11/2026)
+
+**Configuración** (`/admin/configuracion`, solo rol admin, también exigido por RLS)
+- **Logotipo** para fondo oscuro y claro. Si existe, sustituye al SVG provisional en la cabecera, la home y el pie.
+- **Datos de la tienda:** nombre, dirección, código postal, localidad y coordenadas (admite coma o punto).
+- **Contacto:** teléfono, WhatsApp (si se rellena, aparece su botón) y email.
+- **Enlaces:** Google Maps y Business Profile, validados (solo https y dominios de Google).
+- **Redes sociales:** Instagram, Facebook y TikTok, validadas por dominio. Aparecen en el pie.
+- **Horario semanal:** un tramo por día o «Cerrado».
+- **Cierres y horarios excepcionales:** fecha, tipo, franja y nota. Tienen prioridad sobre el horario semanal en «Ouvert / Fermé» y se listan en la página de contacto (próximos 6).
+- **Idiomas:** el francés está siempre activo y el inglés se puede activar o desactivar.
+
+**Contenidos** (`/admin/contenidos`)
+- **Bloques editables FR/EN** (`lib/content/blocks.ts`): cabecera de la home, destacados, «Venid a vernos», «À propos» (introducción y dos párrafos) y lema del pie.
+- **Campos vacíos:** se muestra el texto por defecto del diccionario de ese idioma, nunca el francés personalizado en la versión inglesa. El panel enseña el texto por defecto como pista.
+- **Imágenes:** fondo de la cabecera de la home (se oscurece para que el logo se lea) y foto de «À propos».
+
+**Formulario de contacto** (`/contact`, FR/EN)
+- **Campos:** nom, e-mail, message y consentimiento obligatorio, con enlace a la política de privacidad.
+- **Antispam:**
+  - campo trampa oculto;
+  - menos de 3 s desde que se muestra el formulario = bot, que recibe un «éxito» falso y no se envía nada;
+  - límite de 5 envíos por IP y hora, y 60 en total por hora (migración `contact_rate_limit`), guardando solo un hash SHA-256 con sal de la IP durante 24 h.
+- **Envío:** SMTP con `nodemailer`, solo con variables de entorno (`SMTP_*`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `CONTACT_RATE_SALT`).
+  - En texto plano y con `replyTo` al cliente.
+  - El nombre no admite saltos de línea, para evitar la inyección de cabeceras.
+  - **El mensaje no se guarda en ninguna base de datos.**
+- **Sin SMTP configurado:** aviso amable («momentanément indisponible»), el texto escrito no se pierde y queda registrado en el log del servidor.
+- **Privacidad:** la política (FR/EN) se ha actualizado para reflejar este tratamiento.
+
+**Pruebas**
+
+| Prueba | Resultado |
+|---|---|
+| `npm test` (contacto, configuración, días excepcionales, `openStatus`) | 19/19 |
+| Límite de envíos en el PostgreSQL local | 5 por IP, después bloquea; hash no válido rechazado; el público no lee la tabla; límite global de 60/h |
+| Contacto en Chrome, bot rápido | «éxito» falso y 0 intentos de envío |
+| Contacto en Chrome, errores | junto a cada campo, con los valores conservados |
+| Contacto en Chrome, sin SMTP | aviso de indisponible, el texto se conserva |
+| Contacto en inglés | correcto |
+| Editores de horario y días excepcionales en Chrome | datos alineados y ordenados |
+
+**Error encontrado y corregido:** el editor de días excepcionales generaba los identificadores con `crypto.randomUUID()` durante el render, lo que Next 16 rechaza. Ahora usa claves deterministas.
+
+**Pendiente**
+- **Migración `contact_rate_limit`:** aplicarla en Supabase (pidió confirmación y no hubo respuesta). Sin ella, el formulario funciona igual pero sin el límite por IP (lo registra en el log).
+- **SMTP:** configurar las variables de entorno en Vercel con el correo del cliente.
+
 ## Siguientes fases
 
 - **Fases 6–9:** según el prompt maestro.

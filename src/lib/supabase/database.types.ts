@@ -86,7 +86,9 @@ export type Database = {
       };
     };
     Views: { [_ in never]: never };
-    Functions: { [_ in never]: never };
+    Functions: {
+      contact_rate_allow: { Args: { p_hash: string }; Returns: boolean };
+    };
     Enums: { publish_status: "draft" | "published" };
     CompositeTypes: { [_ in never]: never };
   };

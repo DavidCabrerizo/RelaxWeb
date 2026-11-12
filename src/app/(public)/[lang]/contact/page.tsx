@@ -2,6 +2,9 @@ import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
 import { ContactActions } from "@/components/store/ContactActions";
 import { OpeningHours } from "@/components/store/OpeningHours";
 import { OpenNowBadge } from "@/components/store/OpenNowBadge";
+import { SpecialDays } from "@/components/store/SpecialDays";
+import { ContactForm } from "@/components/store/ContactForm";
+import { localizedPath } from "@/lib/i18n/config";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageContext } from "@/lib/i18n/page";
@@ -63,7 +66,9 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
 
           <section aria-labelledby="h-form" className="rounded-[var(--radius-card)] border border-line-dark bg-ink-2 p-6">
             <h2 id="h-form" className="font-extrabold uppercase tracking-wider">{t.contact.formTitle}</h2>
-            <p className="mt-2 text-sm text-muted-dark">{t.contact.formSoon}</p>
+            <div className="mt-4">
+              <ContactForm lang={lang} labels={t.contact.form} privacyHref={localizedPath(lang, "/confidentialite")} />
+            </div>
           </section>
         </div>
 
@@ -71,9 +76,10 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
           <section aria-labelledby="h-hours" className="surface-light rounded-[var(--radius-card)] bg-mist p-6 text-ink sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 id="h-hours" className="eyebrow text-lime-ink">{t.hours.title}</h2>
-              <OpenNowBadge slots={s.openingHours} timezone={s.timezone} locale={lang} labels={t.hours} />
+              <OpenNowBadge slots={s.openingHours} special={s.specialHours} timezone={s.timezone} locale={lang} labels={t.hours} />
             </div>
             <OpeningHours locale={lang} t={t} slots={s.openingHours} tone="light" className="mt-3" />
+            <SpecialDays special={s.specialHours} timezone={s.timezone} locale={lang} labels={{ title: t.hours.special, closed: t.hours.closed }} />
           </section>
 
           <section aria-labelledby="h-map" className="rounded-[var(--radius-card)] border border-line-dark bg-ink-2 p-6">

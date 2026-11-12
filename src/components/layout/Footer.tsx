@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/brand/Logo";
+import { SiteLogo } from "@/components/brand/SiteLogo";
 import { Waves } from "@/components/brand/Waves";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -10,9 +10,9 @@ import { CurrentYear } from "./CurrentYear";
 /** Año de referencia del build; el componente cliente lo corrige si ha cambiado. */
 const BUILD_YEAR = 2026;
 
-type Props = { locale: Locale; t: Dictionary; settings: SiteSettings; categories: Category[] };
+type Props = { locale: Locale; t: Dictionary; settings: SiteSettings; categories: Category[]; tagline: string };
 
-export function Footer({ locale, t, settings, categories }: Props) {
+export function Footer({ locale, t, settings, categories, tagline }: Props) {
   const L = (p: string) => localizedPath(locale, p);
 
   return (
@@ -20,11 +20,19 @@ export function Footer({ locale, t, settings, categories }: Props) {
       <Waves className="absolute inset-x-0 -top-16 h-16 w-full sm:-top-24 sm:h-24" />
       <div className="mx-auto grid max-w-6xl gap-10 px-4 pb-10 pt-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Logo className="w-44" />
-          <p className="mt-4 text-sm text-muted-dark">{t.footer.tagline}</p>
+          <SiteLogo url={settings.logoDarkUrl} className="h-auto w-44" />
+          <p className="mt-4 text-sm text-muted-dark">{tagline}</p>
           <p className="mt-2 text-sm text-muted-dark">
             {[settings.street, [settings.postalCode, settings.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}
           </p>
+          {settings.phone && (
+            <p className="mt-1 text-sm">
+              <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`} className="text-paper/80 hover:text-lime">
+                {settings.phone}
+              </a>
+            </p>
+          )}
+          <SocialLinks social={settings.social} />
         </div>
 
         <nav aria-label={t.footer.explore}>
@@ -68,5 +76,28 @@ export function Footer({ locale, t, settings, categories }: Props) {
         </div>
       </div>
     </footer>
+  );
+}
+
+const SOCIAL_LABEL = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok" } as const;
+
+function SocialLinks({ social }: { social: SiteSettings["social"] }) {
+  const items = (Object.keys(SOCIAL_LABEL) as (keyof typeof SOCIAL_LABEL)[]).filter((k) => social[k]);
+  if (!items.length) return null;
+  return (
+    <ul className="mt-4 flex flex-wrap gap-2">
+      {items.map((k) => (
+        <li key={k}>
+          <a
+            href={social[k]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-9 items-center rounded-full border border-line-dark px-3 text-xs font-bold uppercase tracking-wider text-paper/80 hover:border-lime hover:text-lime"
+          >
+            {SOCIAL_LABEL[k]}
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

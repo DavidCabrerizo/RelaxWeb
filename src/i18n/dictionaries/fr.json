@@ -117,8 +117,27 @@
     "mapConsent": "La carte Google Maps est chargée uniquement après votre accord aux cookies tiers.",
     "mapPending": "La carte sera affichée dès que l'adresse de la boutique sera configurée.",
     "formTitle": "Nous écrire",
-    "formSoon": "Le formulaire de contact sera bientôt disponible. En attendant, appelez-nous ou passez en boutique.",
-    "viewOnMaps": "Voir sur Google Maps"
+    "viewOnMaps": "Voir sur Google Maps",
+    "form": {
+      "name": "Nom",
+      "email": "E-mail",
+      "message": "Message",
+      "consent": "J'accepte que mes données soient utilisées pour répondre à ma demande.",
+      "privacy": "Politique de confidentialité",
+      "submit": "Envoyer",
+      "sending": "Envoi…",
+      "required": "Champs obligatoires",
+      "success": "Merci ! Votre message a bien été envoyé. Nous vous répondrons rapidement.",
+      "errors": {
+        "required": "Ce champ est obligatoire.",
+        "email": "Adresse e-mail invalide.",
+        "messageLength": "Votre message doit contenir au moins 10 caractères.",
+        "consent": "Merci d'accepter l'utilisation de vos données pour vous répondre.",
+        "check": "Merci de vérifier les champs indiqués.",
+        "rate": "Trop de messages envoyés. Merci de réessayer plus tard ou de nous appeler.",
+        "unavailable": "Le formulaire est momentanément indisponible. Merci de nous appeler ou de passer en boutique."
+      }
+    }
   },
   "hours": {
     "title": "Horaires",
@@ -135,7 +154,8 @@
       "Vendredi",
       "Samedi",
       "Dimanche"
-    ]
+    ],
+    "special": "Horaires exceptionnels"
   },
   "age": {
     "title": "Accès réservé aux adultes",

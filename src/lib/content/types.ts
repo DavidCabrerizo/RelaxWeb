@@ -54,6 +54,8 @@ export type Product = {
 };
 
 export type OpeningSlot = { day: number; open: string; close: string }; // day 1 = lunes … 7 = domingo
+/** Cierre u horario excepcional de un día concreto (YYYY-MM-DD). Sin open/close = cerrado todo el día. */
+export type SpecialDay = { date: string; closed: boolean; open?: string; close?: string; note?: string };
 
 export type SiteSettings = {
   businessName: string;
@@ -69,6 +71,9 @@ export type SiteSettings = {
   googleMapsUrl: string | null;
   googleBusinessUrl: string | null;
   openingHours: OpeningSlot[];
+  specialHours: SpecialDay[];
   social: Partial<Record<"instagram" | "facebook" | "tiktok", string>>;
+  logoDarkUrl?: string;
+  logoLightUrl?: string;
   timezone: string;
 };
