@@ -407,8 +407,10 @@ on conflict (id) do update
       file_size_limit = excluded.file_size_limit,
       allowed_mime_types = excluded.allowed_mime_types;
 
-create policy "media lectura publica" on storage.objects
-  for select to anon, authenticated using (bucket_id = 'media');
+-- Sin política SELECT pública: un bucket público sirve sus archivos por URL sin ella,
+-- y una política SELECT abierta permitiría además LISTAR todos los archivos.
+create policy "media staff lee" on storage.objects
+  for select to authenticated using (bucket_id = 'media' and public.is_staff());
 create policy "media staff sube" on storage.objects
   for insert to authenticated with check (bucket_id = 'media' and public.is_staff());
 create policy "media staff actualiza" on storage.objects

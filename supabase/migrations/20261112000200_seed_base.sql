@@ -1,8 +1,9 @@
 -- Datos base reales (no DEMO): categorías del escaparate y horario de la fachada.
+-- Idiomas activos: francés e inglés.
 -- Dirección, teléfono, coordenadas y URLs de Google quedan vacíos hasta confirmarlos.
 
-insert into public.site_settings (id, opening_hours)
-values (1, '[
+insert into public.site_settings (id, enabled_locales, opening_hours)
+values (1, array['fr', 'en'], '[
   {"day": 1, "open": "10:00", "close": "19:00"},
   {"day": 2, "open": "10:00", "close": "19:00"},
   {"day": 3, "open": "10:00", "close": "19:00"},

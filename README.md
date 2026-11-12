@@ -2,7 +2,7 @@
 
 Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-**Estado:** Fase 1 completada (arquitectura, diseño, esquema de base de datos).
+**Estado:** Fases 1–3 completadas (arquitectura y diseño, web pública FR/EN, Supabase y acceso al panel).
 
 ## Arrancar en local
 
@@ -14,9 +14,26 @@ npm run dev                  # http://localhost:3000
 
 ## Base de datos
 
-1. Crea un proyecto en Supabase.
-2. Ejecuta, en orden, los archivos de `supabase/migrations/`: con `supabase db push` o pegándolos en el SQL Editor.
-3. Registra al usuario del cliente en Auth y nómbralo admin. La consulta está en `docs/ARCHITECTURE.md`.
+El proyecto Supabase ya existe: ref `cxcphxxgwymvegjpnjrj`, región Zúrich. Para montarlo de nuevo en otro proyecto:
+
+1. Ejecuta en orden los archivos de `supabase/migrations/`.
+2. Si quieres datos de ejemplo, ejecuta `supabase/seed/demo.sql`.
+3. Crea el usuario del cliente en **Authentication → Users → Add user** y nómbralo admin:
+   ```sql
+   update public.profiles set role = 'admin'
+   where id = (select id from auth.users where email = 'correo@cliente.ch');
+   ```
+4. Recomendado: desactiva los registros públicos en **Authentication → Sign In / Providers → Allow new users to sign up**. Aunque una cuenta nueva no tiene permisos, mejor que no se puedan crear.
+
+## Despliegue en Vercel
+
+Variables de entorno (Production y Preview):
+
+| Variable | Valor |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | URL pública (sin barra final) |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://cxcphxxgwymvegjpnjrj.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | la clave `sb_publishable_…` del proyecto |
 
 ## Probar las políticas RLS en local (opcional)
 

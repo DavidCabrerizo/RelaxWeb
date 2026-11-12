@@ -195,7 +195,66 @@ Error encontrado y corregido durante las pruebas: la protección de rol también
 - El filtro CBD devuelve 3 productos.
 - No hay peticiones fallidas.
 
+## Fase 3 — Supabase y acceso al panel (12/11/2026)
+
+**Proyecto Supabase:** «Relax Sélection», ref `cxcphxxgwymvegjpnjrj`, región **eu-central-2 (Zúrich)**: los datos se quedan en Suiza.
+
+**Migraciones aplicadas**
+- `init_schema`.
+- `seed_base`: 4 categorías, horario e idiomas fr/en.
+
+**Pendiente de tu confirmación:** `hardening` (`…000300_hardening.sql`). Corrige los avisos de Supabase:
+- `search_path` fijo en las funciones de trigger.
+- `is_staff` e `is_admin` pasan a un esquema `private`, fuera de la API.
+- Las funciones de trigger dejan de poderse invocar.
+- Las políticas de escritura se separan por acción.
+- Índice en `products.category_id`.
+
+Está probada en local con las 9 pruebas RLS en verde.
+
+**Datos DEMO:**
+- Se cargan con `supabase/seed/demo.sql`, generado desde `demo-data.ts` (`npx tsx scripts/generate-demo-seed.ts`).
+- Se borran con `supabase/seed/remove-demo.sql`.
+
+**Storage:** se ha quitado la política de lectura pública del bucket `media`. Las URLs públicas siguen funcionando, pero ya no se puede **listar** el contenido del bucket.
+
+**Lectura de contenido**
+- `lib/content/supabase-source.ts` lee el catálogo completo en una consulta por tabla, dentro de `"use cache"` con la etiqueta `content` y `cacheLife("hours")` como red de seguridad. En la Fase 4, el panel la invalidará con `updateTag("content")` tras cada cambio.
+- `repository.ts` usa Supabase si están las variables de entorno y los datos DEMO locales si no.
+- Los idiomas activos salen de `site_settings.enabled_locales`.
+- Un slug antiguo redirige con 308 al nuevo (`slug_redirects`).
+
+**Acceso a `/admin`** (defensa en profundidad)
+
+| Capa | Archivo | Qué hace |
+|---|---|---|
+| 1 | `proxy.ts` | refresca la sesión (`getClaims` valida el JWT); sin sesión → `/admin/login`; añade `X-Robots-Tag: noindex` |
+| 2 | `(panel)/layout.tsx` y cada página | `requireStaff()` verifica el usuario con `getUser()` y exige rol `admin` o `editor`; si no, redirige. Las Server Actions de la Fase 4 lo llamarán también |
+| 3 | RLS | aunque fallaran las dos capas anteriores, la base de datos rechaza las escrituras |
+
+**Login** (Server Action)
+- Validación en el servidor.
+- Mensaje genérico, que no revela si el correo existe.
+- Si la cuenta no tiene rol, cierra la sesión.
+- Supabase Auth limita los intentos.
+
+**Probado**
+
+En el proyecto real, simulando roles dentro de una transacción deshecha:
+
+| Rol | Resultado |
+|---|---|
+| `anon` | ve 12 productos publicados, 0 borradores, 0 perfiles |
+| usuario sin rol | 0 borradores, 0 archivos listables |
+
+En local:
+- `/admin` y `/admin/productos` → 307 a `/admin/login`, también con una cookie de sesión falsificada.
+- El login lleva `noindex`.
+
+**Limitación de este entorno:** desde aquí no se llega a `supabase.co`, así que la web leyendo de Supabase y el login completo se prueban en Vercel o en local. El build de este entorno se hizo en modo DEMO.
+
+**Aviso de Next.js 16:** Cache Components y Partial Prefetching serán obligatorios en la próxima versión mayor. Para entonces habrá que volver a revisar el código 404 de las fichas inexistentes (ver Fase 2).
+
 ## Siguientes fases
 
-- **Fase 3:** conexión a Supabase, auth, sesión en `proxy.ts` y protección de `/admin`.
 - **Fases 4–9:** según el prompt maestro.

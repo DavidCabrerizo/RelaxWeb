@@ -1,16 +1,16 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ProductCard } from "@/components/ui/Cards";
 import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
-import { isLocale } from "@/lib/i18n/config";
+import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageContext } from "@/lib/i18n/page";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getEnabledLocales } from "@/lib/site/defaults";
-import { getAllSlugs, getBrand, getProducts } from "@/lib/content/repository";
+import { getAllSlugs, getBrand, getProducts, findRedirect } from "@/lib/content/repository";
 
 export async function generateStaticParams() {
   const { brands } = await getAllSlugs();
-  return getEnabledLocales().flatMap((lang) => brands.map((slug) => ({ lang, slug })));
+  return (await getEnabledLocales()).flatMap((lang) => brands.map((slug) => ({ lang, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/marques/[slug]">) {
@@ -31,7 +31,12 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/marques/[
   const { lang, t } = await pageContext(params);
   const { slug } = await params;
   const brand = await getBrand(slug, lang);
-  if (!brand) notFound();
+  if (!brand) {
+    // Slug renombrado desde el admin → redirección permanente al nuevo (conserva el SEO)
+    const to = await findRedirect("brand", slug);
+    if (to) permanentRedirect(localizedPath(lang, `/marques/${to}`));
+    notFound();
+  }
   const products = await getProducts(lang, { brand: brand.slug });
 
   return (

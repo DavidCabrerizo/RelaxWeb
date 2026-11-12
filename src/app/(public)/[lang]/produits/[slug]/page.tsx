@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { CategoryIcon } from "@/components/brand/CategoryIcon";
 import { DemoBadge, ProductCard, ProductMedia } from "@/components/ui/Cards";
 import { Breadcrumbs } from "@/components/ui/PageHeader";
@@ -9,11 +9,11 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageContext } from "@/lib/i18n/page";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getEnabledLocales } from "@/lib/site/defaults";
-import { getAllSlugs, getProduct, getProducts, getSettings } from "@/lib/content/repository";
+import { getAllSlugs, getProduct, getProducts, getSettings, findRedirect } from "@/lib/content/repository";
 
 export async function generateStaticParams() {
   const { products } = await getAllSlugs();
-  return getEnabledLocales().flatMap((lang) => products.map((slug) => ({ lang, slug })));
+  return (await getEnabledLocales()).flatMap((lang) => products.map((slug) => ({ lang, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/produits/[slug]">) {
@@ -34,7 +34,12 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/produit
   const { lang, t } = await pageContext(params);
   const { slug } = await params;
   const product = await getProduct(slug, lang);
-  if (!product) notFound();
+  if (!product) {
+    // Slug renombrado desde el admin → redirección permanente al nuevo (conserva el SEO)
+    const to = await findRedirect("product", slug);
+    if (to) permanentRedirect(localizedPath(lang, `/produits/${to}`));
+    notFound();
+  }
 
   const [related, settings] = await Promise.all([
     getProducts(lang, { category: product.category.slug }).then((l) => l.filter((p) => p.slug !== product.slug).slice(0, 4)),

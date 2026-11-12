@@ -13,8 +13,8 @@ import { CookieBanner } from "@/components/legal/CookieBanner";
 
 export const viewport: Viewport = { themeColor: "#111111", colorScheme: "dark" };
 
-export function generateStaticParams() {
-  return getEnabledLocales().map((lang) => ({ lang }));
+export async function generateStaticParams() {
+  return (await getEnabledLocales()).map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 
 export default async function PublicRootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  if (!isLocale(lang) || !getEnabledLocales().includes(lang)) notFound();
+  if (!isLocale(lang) || !(await getEnabledLocales()).includes(lang)) notFound();
 
   const [t, settings, categories] = await Promise.all([getDictionary(lang), getSettings(), getCategories(lang)]);
 

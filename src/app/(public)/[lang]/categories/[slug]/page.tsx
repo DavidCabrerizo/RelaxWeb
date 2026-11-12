@@ -1,18 +1,18 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { CategoryIcon } from "@/components/brand/CategoryIcon";
 import { ProductCard } from "@/components/ui/Cards";
 import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
-import { isLocale } from "@/lib/i18n/config";
+import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { fmt } from "@/lib/i18n/format";
 import { pageContext } from "@/lib/i18n/page";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getEnabledLocales } from "@/lib/site/defaults";
-import { getAllSlugs, getCategory, getProducts } from "@/lib/content/repository";
+import { getAllSlugs, getCategory, getProducts, findRedirect } from "@/lib/content/repository";
 
 export async function generateStaticParams() {
   const { categories } = await getAllSlugs();
-  return getEnabledLocales().flatMap((lang) => categories.map((slug) => ({ lang, slug })));
+  return (await getEnabledLocales()).flatMap((lang) => categories.map((slug) => ({ lang, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/categories/[slug]">) {
@@ -33,7 +33,12 @@ export default async function CategoryPage({ params }: PageProps<"/[lang]/catego
   const { lang, t } = await pageContext(params);
   const { slug } = await params;
   const category = await getCategory(slug, lang);
-  if (!category) notFound();
+  if (!category) {
+    // Slug renombrado desde el admin → redirección permanente al nuevo (conserva el SEO)
+    const to = await findRedirect("category", slug);
+    if (to) permanentRedirect(localizedPath(lang, `/categories/${to}`));
+    notFound();
+  }
   const products = await getProducts(lang, { category: category.slug });
 
   return (

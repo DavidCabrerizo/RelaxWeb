@@ -1,15 +1,56 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/i18n/config";
 
 /**
- * Enrutado de idiomas:
- *  - /fr/...      → redirección 308 a /... (evita URLs duplicadas del idioma por defecto)
- *  - /en/...      → se sirve tal cual (app/[lang])
- *  - /...         → reescritura interna a /fr/...
- * /admin y /api quedan fuera (no son multidioma). La sesión de Supabase para /admin
- * se añade en la Fase 3.
+ * 1) /admin: refresca la sesión de Supabase (cookies) y envía a /admin/login si no hay usuario.
+ *    Es la PRIMERA capa. La autorización real (rol) se comprueba en el servidor
+ *    (lib/auth/guard.ts) y en la base de datos (RLS).
+ * 2) Web pública: enrutado de idiomas
+ *    /fr/... → 308 a /...   ·   /en/... → tal cual   ·   /... → reescritura interna a /fr/...
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return adminSession(request);
+  return localeRouting(request);
+}
+
+async function adminSession(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const isLogin = request.nextUrl.pathname === "/admin/login";
+  if (!url || !key) {
+    // Sin Supabase configurado el panel no puede funcionar: todo va al login, que lo explica
+    return isLogin ? NextResponse.next() : NextResponse.redirect(new URL("/admin/login", request.url));
+  }
+
+  let response = NextResponse.next({ request });
+  const supabase = createServerClient(url, key, {
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll: (toSet) => {
+        toSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        response = NextResponse.next({ request });
+        toSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+      },
+    },
+  });
+
+  // getClaims valida el JWT de la sesión (y la refresca si hace falta)
+  const { data } = await supabase.auth.getClaims();
+  const signedIn = Boolean(data?.claims?.sub);
+
+  if (!signedIn && !isLogin) {
+    const login = new URL("/admin/login", request.url);
+    const redirect = NextResponse.redirect(login);
+    response.cookies.getAll().forEach((c) => redirect.cookies.set(c));
+    return redirect;
+  }
+  response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return response;
+}
+
+function localeRouting(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === `/${DEFAULT_LOCALE}` || pathname.startsWith(`/${DEFAULT_LOCALE}/`)) {
@@ -30,7 +71,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Todo salvo admin, api, internos de Next y archivos con extensión
-    "/((?!admin|api|_next|.*\\..*).*)",
+    // Todo salvo api, internos de Next y archivos con extensión (incluye /admin)
+    "/((?!api|_next|.*\\..*).*)",
   ],
 };

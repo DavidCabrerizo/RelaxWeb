@@ -5,14 +5,14 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { getEnabledLocales } from "@/lib/site/defaults";
 import { HeaderNav } from "./HeaderNav";
 
-export function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
+export async function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
   const items = [
     { path: "/produits", label: t.nav.products },
     { path: "/marques", label: t.nav.brands },
     { path: "/a-propos", label: t.nav.about },
     { path: "/contact", label: t.nav.contact },
   ];
-  const languages = getEnabledLocales().map((l) => ({ locale: l, label: t.language[l], short: l }));
+  const languages = (await getEnabledLocales()).map((l) => ({ locale: l, label: t.language[l], short: l }));
 
   return (
     <header className="sticky top-0 z-50 border-b border-line-dark/70 bg-ink/90 backdrop-blur supports-[backdrop-filter]:bg-ink/75">
