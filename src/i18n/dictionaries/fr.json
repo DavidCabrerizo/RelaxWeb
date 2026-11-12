@@ -1,35 +1,140 @@
 {
+  "meta": {
+    "siteTitle": "Relax Sélection — Vape, CBD, e-liquides et accessoires à Genève",
+    "siteDescription": "Boutique multimarque à Genève : vape, CBD, e-liquides et accessoires. Conseils personnalisés en magasin, à deux pas de Carouge, Lancy et Chêne-Bourg.",
+    "products": { "title": "Produits — vape, CBD, e-liquides et accessoires", "description": "Découvrez une sélection de produits disponibles en boutique à Genève : vape, CBD, e-liquides et accessoires." },
+    "brands": { "title": "Nos marques", "description": "Les marques de vape, CBD et e-liquides sélectionnées par Relax Sélection à Genève." },
+    "about": { "title": "À propos de la boutique", "description": "Relax Sélection, boutique de vape et CBD à Genève : notre sélection, nos conseils et notre engagement qualité." },
+    "contact": { "title": "Contact, horaires et itinéraire", "description": "Adresse, horaires d'ouverture, téléphone et itinéraire vers la boutique Relax Sélection à Genève." },
+    "legal": { "title": "Mentions légales", "description": "Mentions légales du site Relax Sélection." },
+    "privacy": { "title": "Politique de confidentialité", "description": "Comment Relax Sélection traite vos données personnelles (nLPD)." },
+    "categoryTitle": "{name} à Genève",
+    "categoryDescription": "{name} disponibles chez Relax Sélection, boutique multimarque à Genève. Conseils en magasin."
+  },
   "nav": {
     "home": "Accueil",
     "products": "Produits",
     "brands": "Marques",
     "about": "À propos",
-    "contact": "Contact"
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Fermer",
+    "skip": "Aller au contenu"
   },
-  "categories": {
-    "vape": "Vape",
-    "cbd": "CBD",
-    "eliquid": "E-liquides",
-    "accessories": "Accessoires"
+  "language": {
+    "label": "Langue",
+    "fr": "Français",
+    "en": "English"
   },
   "cta": {
     "directions": "Itinéraire",
     "call": "Appeler",
-    "seeProducts": "Voir les produits"
+    "whatsapp": "WhatsApp",
+    "seeProducts": "Voir les produits",
+    "seeAll": "Tout voir",
+    "seeBrand": "Voir la marque",
+    "visitUs": "Nous rendre visite",
+    "back": "Retour"
+  },
+  "home": {
+    "heroText": "Boutique multimarque au cœur de Genève. Vape, CBD, e-liquides et accessoires, avec des conseils personnalisés en magasin.",
+    "categoriesTitle": "Nos univers",
+    "featuredTitle": "Sélection du moment",
+    "featuredText": "Une partie de notre sélection, à découvrir et à essayer en boutique.",
+    "brandsTitle": "Marques à la une",
+    "visitTitle": "Venez nous voir",
+    "visitText": "Notre équipe vous accueille en boutique pour vous conseiller et vous présenter les produits.",
+    "areasTitle": "Facilement accessible depuis",
+    "areas": "Genève, Carouge, Lancy, Onex, Vernier, Meyrin, Plan-les-Ouates, Thônex et Chêne-Bourg."
+  },
+  "catalog": {
+    "title": "Nos produits",
+    "intro": "Catalogue informatif : les produits sont disponibles en boutique. Pas de vente en ligne.",
+    "filterCategory": "Catégorie",
+    "filterBrand": "Marque",
+    "all": "Tous",
+    "empty": "Aucun produit ne correspond à ces filtres.",
+    "count": "{n} produit(s)",
+    "features": "Caractéristiques",
+    "brand": "Marque",
+    "category": "Catégorie",
+    "inStore": "Disponible en boutique",
+    "inStoreText": "Passez en boutique pour le découvrir et obtenir des conseils. Disponibilité à confirmer par téléphone.",
+    "related": "Dans la même catégorie",
+    "brandProducts": "Produits de la marque"
+  },
+  "brandsPage": {
+    "title": "Nos marques",
+    "intro": "Des marques choisies pour leur qualité et leur fiabilité."
+  },
+  "about": {
+    "title": "À propos",
+    "lead": "Relax Sélection est une boutique multimarque située à Genève, dédiée à la vape, au CBD, aux e-liquides et aux accessoires.",
+    "p1": "Nous sélectionnons nos produits auprès de marques reconnues et prenons le temps de conseiller chaque client, qu'il débute ou qu'il soit déjà connaisseur.",
+    "p2": "En boutique, vous pouvez découvrir le matériel, comparer les saveurs d'e-liquides et poser toutes vos questions à notre équipe.",
+    "valuesTitle": "Notre engagement",
+    "values": [
+      { "title": "Sélection", "text": "Des produits choisis avec soin, conformes à la réglementation suisse." },
+      { "title": "Conseil", "text": "Un accompagnement personnalisé, sans jargon." },
+      { "title": "Responsabilité", "text": "Vente réservée aux personnes majeures. Aucune allégation de santé." }
+    ]
+  },
+  "contact": {
+    "title": "Contact et accès",
+    "intro": "Retrouvez-nous en boutique à Genève.",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "pending": "Information bientôt disponible",
+    "mapTitle": "Plan d'accès",
+    "mapConsent": "La carte Google Maps est chargée uniquement après votre accord aux cookies tiers.",
+    "mapPending": "La carte sera affichée dès que l'adresse de la boutique sera configurée.",
+    "formTitle": "Nous écrire",
+    "formSoon": "Le formulaire de contact sera bientôt disponible. En attendant, appelez-nous ou passez en boutique."
   },
   "hours": {
     "title": "Horaires",
     "open": "Ouvert",
     "closed": "Fermé",
+    "openNow": "Ouvert maintenant",
+    "closedNow": "Fermé actuellement",
+    "closesAt": "ferme à {time}",
     "days": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
   },
   "age": {
+    "title": "Accès réservé aux adultes",
     "question": "Avez-vous 18 ans ou plus ?",
     "yes": "Oui, j'ai 18 ans ou plus",
     "no": "Non",
-    "notice": "La vente de produits de vapotage est interdite aux moins de 18 ans."
+    "notice": "La vente de produits de vapotage est interdite aux moins de 18 ans.",
+    "denied": "Désolé, ce site est réservé aux personnes majeures."
+  },
+  "cookies": {
+    "text": "Nous utilisons des cookies nécessaires au fonctionnement du site. Avec votre accord, nous chargeons aussi des contenus tiers (Google Maps).",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "more": "En savoir plus"
   },
   "legal": {
-    "cbd": "Produits CBD conformes à la législation suisse (THC < 1 %). Aucune allégation thérapeutique."
+    "cbd": "Produits CBD conformes à la législation suisse (THC < 1 %). Aucune allégation thérapeutique.",
+    "draftNotice": "Texte provisoire à faire valider par le client avant la mise en ligne.",
+    "legalTitle": "Mentions légales",
+    "privacyTitle": "Politique de confidentialité"
+  },
+  "footer": {
+    "tagline": "Vape · CBD · E-liquides · Accessoires",
+    "explore": "Explorer",
+    "info": "Informations",
+    "rights": "Tous droits réservés."
+  },
+  "common": {
+    "demo": "DÉMO",
+    "home": "Accueil",
+    "breadcrumb": "Fil d'Ariane"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "text": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "back": "Retour à l'accueil"
   }
 }

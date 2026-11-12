@@ -1,35 +1,140 @@
 {
+  "meta": {
+    "siteTitle": "Relax Sélection — Vape, CBD, e-liquids and accessories in Geneva",
+    "siteDescription": "Multi-brand shop in Geneva: vape, CBD, e-liquids and accessories. Personal advice in store, close to Carouge, Lancy and Chêne-Bourg.",
+    "products": { "title": "Products — vape, CBD, e-liquids and accessories", "description": "Browse a selection of products available in our Geneva shop: vape, CBD, e-liquids and accessories." },
+    "brands": { "title": "Our brands", "description": "The vape, CBD and e-liquid brands selected by Relax Sélection in Geneva." },
+    "about": { "title": "About the shop", "description": "Relax Sélection, vape and CBD shop in Geneva: our selection, our advice and our commitment to quality." },
+    "contact": { "title": "Contact, opening hours and directions", "description": "Address, opening hours, phone and directions to the Relax Sélection shop in Geneva." },
+    "legal": { "title": "Legal notice", "description": "Legal notice of the Relax Sélection website." },
+    "privacy": { "title": "Privacy policy", "description": "How Relax Sélection processes your personal data (Swiss FADP)." },
+    "categoryTitle": "{name} in Geneva",
+    "categoryDescription": "{name} available at Relax Sélection, multi-brand shop in Geneva. Advice in store."
+  },
   "nav": {
     "home": "Home",
     "products": "Products",
     "brands": "Brands",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "skip": "Skip to content"
   },
-  "categories": {
-    "vape": "Vape",
-    "cbd": "CBD",
-    "eliquid": "E-liquids",
-    "accessories": "Accessories"
+  "language": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
   },
   "cta": {
     "directions": "Directions",
     "call": "Call",
-    "seeProducts": "See products"
+    "whatsapp": "WhatsApp",
+    "seeProducts": "See products",
+    "seeAll": "See all",
+    "seeBrand": "View brand",
+    "visitUs": "Visit us",
+    "back": "Back"
+  },
+  "home": {
+    "heroText": "Multi-brand shop in the heart of Geneva. Vape, CBD, e-liquids and accessories, with personal advice in store.",
+    "categoriesTitle": "Our ranges",
+    "featuredTitle": "Current selection",
+    "featuredText": "Part of our selection, to discover and try in store.",
+    "brandsTitle": "Featured brands",
+    "visitTitle": "Come and see us",
+    "visitText": "Our team welcomes you in store to advise you and show you the products.",
+    "areasTitle": "Easy to reach from",
+    "areas": "Geneva, Carouge, Lancy, Onex, Vernier, Meyrin, Plan-les-Ouates, Thônex and Chêne-Bourg."
+  },
+  "catalog": {
+    "title": "Our products",
+    "intro": "Informational catalogue: products are available in store. No online sales.",
+    "filterCategory": "Category",
+    "filterBrand": "Brand",
+    "all": "All",
+    "empty": "No products match these filters.",
+    "count": "{n} product(s)",
+    "features": "Features",
+    "brand": "Brand",
+    "category": "Category",
+    "inStore": "Available in store",
+    "inStoreText": "Visit the shop to discover it and get advice. Please call to confirm availability.",
+    "related": "In the same category",
+    "brandProducts": "Products from this brand"
+  },
+  "brandsPage": {
+    "title": "Our brands",
+    "intro": "Brands chosen for their quality and reliability."
+  },
+  "about": {
+    "title": "About",
+    "lead": "Relax Sélection is a multi-brand shop in Geneva dedicated to vape, CBD, e-liquids and accessories.",
+    "p1": "We select our products from recognised brands and take the time to advise every customer, whether a beginner or an expert.",
+    "p2": "In store, you can try devices, compare e-liquid flavours and ask our team all your questions.",
+    "valuesTitle": "Our commitment",
+    "values": [
+      { "title": "Selection", "text": "Carefully chosen products that comply with Swiss regulations." },
+      { "title": "Advice", "text": "Personal guidance, without jargon." },
+      { "title": "Responsibility", "text": "Sales to adults only. No health claims." }
+    ]
+  },
+  "contact": {
+    "title": "Contact and directions",
+    "intro": "Find us in store in Geneva.",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "pending": "Information coming soon",
+    "mapTitle": "Map",
+    "mapConsent": "The Google Maps map only loads after you accept third-party cookies.",
+    "mapPending": "The map will be displayed once the shop address is configured.",
+    "formTitle": "Write to us",
+    "formSoon": "The contact form will be available soon. In the meantime, call us or visit the shop."
   },
   "hours": {
     "title": "Opening hours",
     "open": "Open",
     "closed": "Closed",
+    "openNow": "Open now",
+    "closedNow": "Closed now",
+    "closesAt": "closes at {time}",
     "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
   },
   "age": {
+    "title": "Adults only",
     "question": "Are you 18 or older?",
     "yes": "Yes, I am 18 or older",
     "no": "No",
-    "notice": "The sale of vaping products to under-18s is prohibited."
+    "notice": "The sale of vaping products to under-18s is prohibited.",
+    "denied": "Sorry, this website is for adults only."
+  },
+  "cookies": {
+    "text": "We use cookies required for the website to work. With your consent, we also load third-party content (Google Maps).",
+    "accept": "Accept",
+    "decline": "Decline",
+    "more": "Learn more"
   },
   "legal": {
-    "cbd": "CBD products compliant with Swiss law (THC < 1%). No therapeutic claims."
+    "cbd": "CBD products compliant with Swiss law (THC < 1%). No therapeutic claims.",
+    "draftNotice": "Provisional text, to be approved by the client before going live.",
+    "legalTitle": "Legal notice",
+    "privacyTitle": "Privacy policy"
+  },
+  "footer": {
+    "tagline": "Vape · CBD · E-liquids · Accessories",
+    "explore": "Explore",
+    "info": "Information",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "demo": "DEMO",
+    "home": "Home",
+    "breadcrumb": "Breadcrumb"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has been moved.",
+    "back": "Back to home"
   }
 }

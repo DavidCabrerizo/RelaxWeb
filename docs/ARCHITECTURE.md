@@ -153,8 +153,49 @@ Error encontrado y corregido durante las pruebas: la protección de rol también
 - Marcas que trabajan y los primeros productos (con fotos).
 - Dominio definitivo.
 
+## Fase 2 — Web pública (12/11/2026)
+
+**Idiomas:** francés (`/`) e inglés (`/en`), los dos activos.
+- El selector FR/EN conserva la página en la que estás.
+- Cada página lleva `canonical`, `hreflang` (fr-CH, en y x-default) y un `<html lang>` correcto.
+
+**Páginas** (`app/(public)/[lang]/…`)
+
+| Página | Qué incluye |
+|---|---|
+| Accueil | hero con el logo, estado «Ouvert / Fermé», 4 categorías, 4 productos destacados, marcas destacadas, horario, «Itinéraire / Appeler» y localidades cercanas |
+| `produits` | catálogo con filtros por categoría y marca (`?categorie=` y `?marque=`, validados); las vistas filtradas comparten canonical con `/produits` |
+| `produits/[slug]` | ficha con características, categoría, marca, «Disponible en boutique» y productos relacionados |
+| `categories/[slug]`, `marques`, `marques/[slug]`, `a-propos`, `contact` | — |
+| `mentions-legales`, `confidentialite` | plantillas FR/EN con un aviso de «texto provisional» |
+| 404 | bilingüe y con código 404 real |
+
+**Contenido DEMO:** `lib/content/demo-data.ts`, con 4 marcas ficticias y 12 productos (3 por categoría), sin precios ni afirmaciones de salud.
+- Las páginas solo leen a través de `lib/content/repository.ts`. En la Fase 3 se cambia esa implementación por Supabase sin tocar las páginas.
+- Si falta una traducción, se muestra el francés.
+
+**Cumplimiento**
+- **Aviso de +18:** cookie `rs_age` durante 1 año. Se monta en el navegador, así que el HTML sigue siendo indexable.
+- **Banner de cookies:** cookie `rs_consent`. Aparece después del aviso de edad y prepara la carga de Google Maps con consentimiento (Fase 7).
+- **Datos que faltan:** si no hay dirección ni teléfono, los botones «Itinéraire» y «Appeler» se muestran desactivados. No se inventan datos.
+
+**Decisiones técnicas de esta fase**
+- **`partialPrefetching` desactivado.** Con esa opción, una ficha inexistente respondía 200 en lugar de 404, porque el streaming empieza antes de `notFound()`. Comprobado después del cambio: `/produits/x`, `/en/produits/x`, `/marques/x` y `/categories/x` → 404.
+- **Catálogo:** el listado filtrado va dentro de `<Suspense>`, porque lee `searchParams`. El resto de páginas son estáticas.
+- **Componentes cliente:** el selector de idioma y el menú quitan el prefijo de idioma a la ruta (`lib/i18n/path.ts`). Así el servidor (`/fr/x`) y el navegador (`/x`) calculan lo mismo y no hay errores de hidratación.
+- **Lint limpio:** las cookies y la fecha se leen con `useSyncExternalStore`, y el menú se cierra con ajuste de estado durante el render.
+
+**Logo:** placeholder ajustado a la referencia (`docs/brand/logo-referencia.png`): letras rectas, ola verde, A verde con hoja, X con trazo verde y humo.
+
+**Probado en Chrome** (390 px y 1366 px):
+- El aviso de edad aparece y se cierra.
+- El banner de cookies funciona.
+- FR ↔ EN conserva la ficha y cambia `lang` y el título.
+- El menú móvil se abre y se cierra al navegar.
+- El filtro CBD devuelve 3 productos.
+- No hay peticiones fallidas.
+
 ## Siguientes fases
 
-- **Fase 2:** Header, Footer, verificación de edad, banner de cookies y las páginas públicas con datos DEMO.
 - **Fase 3:** conexión a Supabase, auth, sesión en `proxy.ts` y protección de `/admin`.
 - **Fases 4–9:** según el prompt maestro.
