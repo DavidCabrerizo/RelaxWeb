@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Sistema de diseño Relax Sélection
+ * Colores tomados de la fachada (verde medido sobre la foto: ~#7EF424).
+ * Contraste comprobado (WCAG):
+ *   lime #7EF424 sobre ink #111111 → 13.4:1  (texto y botones en zonas oscuras)
+ *   lime-ink #3B7A12 sobre blanco   → 5.3:1   (texto verde en zonas claras)
+ *   lime #7EF424 sobre blanco       → 1.4:1   ✗ nunca para texto en zonas claras
+ */
+@theme {
+  --color-ink: #111111;
+  --color-ink-2: #1a1a1a;
+  --color-ink-3: #242624;
+  --color-lime: #7ef424;
+  --color-lime-soft: #a8f86b;
+  --color-lime-ink: #3b7a12;
+  --color-paper: #ffffff;
+  --color-mist: #f5f6f4;
+  --color-line: #e3e6e1;
+  --color-line-dark: #2e312d;
+  --color-muted: #5e655c;
+  --color-muted-dark: #a3a8a0;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --radius-card: 1.25rem;
+  --shadow-glow: 0 0 0 1px rgb(126 244 36 / 0.35), 0 8px 30px -8px rgb(126 244 36 / 0.35);
+
+  --animate-rise: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 3px;
+  }
+  .surface-light :focus-visible {
+    outline-color: var(--color-lime-ink);
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.25em];
+  }
+  .display {
+    @apply font-extrabold uppercase leading-[1.05] tracking-tight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

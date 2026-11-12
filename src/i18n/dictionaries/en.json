@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "brands": "Brands",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "categories": {
+    "vape": "Vape",
+    "cbd": "CBD",
+    "eliquid": "E-liquids",
+    "accessories": "Accessories"
+  },
+  "cta": {
+    "directions": "Directions",
+    "call": "Call",
+    "seeProducts": "See products"
+  },
+  "hours": {
+    "title": "Opening hours",
+    "open": "Open",
+    "closed": "Closed",
+    "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "age": {
+    "question": "Are you 18 or older?",
+    "yes": "Yes, I am 18 or older",
+    "no": "No",
+    "notice": "The sale of vaping products to under-18s is prohibited."
+  },
+  "legal": {
+    "cbd": "CBD products compliant with Swiss law (THC < 1%). No therapeutic claims."
+  }
+}

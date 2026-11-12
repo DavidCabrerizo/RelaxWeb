@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Relax Sélection — web escaparate
 
-## Getting Started
+Next.js 16 + Tailwind 4 + Supabase. La arquitectura, el sistema de diseño y las decisiones técnicas están en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-First, run the development server:
+**Estado:** Fase 1 completada (arquitectura, diseño, esquema de base de datos).
+
+## Arrancar en local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # rellena las variables de Supabase cuando exista el proyecto
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Base de datos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Crea un proyecto en Supabase.
+2. Ejecuta, en orden, los archivos de `supabase/migrations/`: con `supabase db push` o pegándolos en el SQL Editor.
+3. Registra al usuario del cliente en Auth y nómbralo admin. La consulta está en `docs/ARCHITECTURE.md`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Probar las políticas RLS en local (opcional)
 
-## Learn More
+Necesitas PostgreSQL 16:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+createdb relax_test
+psql -d relax_test -f supabase/tests/00_supabase_stub.sql
+psql -d relax_test -f supabase/migrations/20261112000100_init_schema.sql
+psql -d relax_test -f supabase/migrations/20261112000200_seed_base.sql
+psql -d relax_test -f supabase/tests/rls_and_constraints.sql
+```
