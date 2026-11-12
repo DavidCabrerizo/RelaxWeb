@@ -203,14 +203,14 @@ Error encontrado y corregido durante las pruebas: la protección de rol también
 - `init_schema`.
 - `seed_base`: 4 categorías, horario e idiomas fr/en.
 
-**Pendiente de tu confirmación:** `hardening` (`…000300_hardening.sql`). Corrige los avisos de Supabase:
+**Aplicada el 12/11/2026:** `hardening` (`…000300_hardening.sql`). Corrige los avisos de Supabase:
 - `search_path` fijo en las funciones de trigger.
 - `is_staff` e `is_admin` pasan a un esquema `private`, fuera de la API.
 - Las funciones de trigger dejan de poderse invocar.
 - Las políticas de escritura se separan por acción.
 - Índice en `products.category_id`.
 
-Está probada en local con las 9 pruebas RLS en verde.
+Probada en local con las 9 pruebas RLS en verde. Tras aplicarla, el asesor de seguridad de Supabase queda **sin avisos** y el público sigue viendo los 12 productos publicados y 0 borradores.
 
 **Datos DEMO:**
 - Se cargan con `supabase/seed/demo.sql`, generado desde `demo-data.ts` (`npx tsx scripts/generate-demo-seed.ts`).
