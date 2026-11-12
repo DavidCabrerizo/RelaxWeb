@@ -387,8 +387,17 @@ Supabase impide borrar archivos con SQL directo (solo con su API de Storage, que
 
 **Error encontrado y corregido:** el editor de días excepcionales generaba los identificadores con `crypto.randomUUID()` durante el render, lo que Next 16 rechaza. Ahora usa claves deterministas.
 
+**Migración `contact_rate_limit` aplicada el 12/11/2026.** Comprobada en el proyecto real: 5 envíos aceptados por IP, el 6.º bloqueado, y el hash no válido rechazado.
+
+Avisos del asesor de Supabase:
+
+| Aviso | Por qué |
+|---|---|
+| `contact_rate_allow` ejecutable por `anon` | Intencionado: la web la llama sin sesión, solo recibe un hash y no devuelve datos |
+| `private.contact_rate` con RLS y sin políticas | Intencionado: solo accede la función |
+| «Leaked password protection» desactivada | Recomendado activarla en Authentication → Providers → Email → *Prevent use of leaked passwords* (impide contraseñas filtradas). Puede requerir el plan Pro |
+
 **Pendiente**
-- **Migración `contact_rate_limit`:** aplicarla en Supabase (pidió confirmación y no hubo respuesta). Sin ella, el formulario funciona igual pero sin el límite por IP (lo registra en el log).
 - **SMTP:** configurar las variables de entorno en Vercel con el correo del cliente.
 
 ## Siguientes fases
