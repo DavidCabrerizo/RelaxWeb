@@ -111,6 +111,25 @@
   animation: none;
 }
 
+/* Menú móvil: el panel aparece con un fundido y los enlaces entran escalonados */
+.mobile-menu {
+  animation: 220ms ease-out both menu-in;
+}
+.mobile-menu-item {
+  animation: 420ms cubic-bezier(0.22, 1, 0.36, 1) both menu-item-in;
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
 /* Foto de producto: de la tarjeta a la ficha (y vuelta) con un desenfoque mínimo a mitad de vuelo */
 ::view-transition-group(.morph) {
   animation-duration: 420ms;

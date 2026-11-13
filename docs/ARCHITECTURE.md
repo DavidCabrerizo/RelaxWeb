@@ -520,6 +520,11 @@ Accesibilidad, buenas prácticas y SEO: 100 en todas las páginas y perfiles.
 
 En móvil el LCP real medido es de 0,2–0,5 s. La nota simulada (2–3 s) suma el JavaScript de Next y React que se descarga en paralelo (≈125 KB comprimidos, imprescindibles para el panel, la navegación y las transiciones). Una prueba A/B confirmó que las transiciones no la empeoran. La medición que cuenta es PageSpeed Insights sobre la web publicada y, con tráfico real, los Core Web Vitals de Search Console.
 
+**Menú móvil (13/11/2026)**
+- Antes se veía transparente porque el panel era `fixed` dentro de la cabecera, y el `backdrop-filter` de la cabecera hace que esta sea el contenedor de los elementos fijos: el panel medía 64 px y los enlaces flotaban sobre la página. Ahora se monta en `<body>` con un portal, a pantalla completa y con fondo sólido.
+- Diseño: enlaces grandes numerados que entran escalonados, brillo verde, hoja de cáñamo tenue de fondo y accesos «Itinéraire» y «Appeler» con la dirección. Se cierra con Escape o al navegar; mientras está abierto, el contenido de detrás queda inerte y sin scroll.
+- Icono del botón: hoja de cáñamo dibujada a mano (`src/components/brand/HempLeaf.tsx`, 7 folíolos dentados) que gira y se convierte en X al abrir. El nombre accesible sigue siendo «Menu» / «Fermer».
+
 ## Siguientes fases
 
 - **Fase 9:** despliegue en Vercel, dominio, Search Console, manual del panel y retirada de los datos de demo.

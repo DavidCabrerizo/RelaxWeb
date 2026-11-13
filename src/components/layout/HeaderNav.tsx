@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { HempLeaf } from "@/components/brand/HempLeaf";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import { stripLocale } from "@/lib/i18n/path";
 
@@ -13,9 +15,16 @@ type Props = {
   items: Item[];
   languages: { locale: Locale; label: string; short: string }[];
   labels: { menu: string; close: string; language: string };
+  /** Accesos directos de la tienda al pie del menú móvil (null si falta el dato: no se inventan) */
+  quick: {
+    directions: string | null;
+    tel: string | null;
+    address: string;
+    labels: { directions: string; call: string };
+  };
 };
 
-export function HeaderNav({ locale, items, languages, labels }: Props) {
+export function HeaderNav({ locale, items, languages, labels, quick }: Props) {
   const current = stripLocale(usePathname());
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(current);
@@ -31,6 +40,11 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = "hidden";
+    // El contenido de detrás queda inerte: ni Tab ni lectores de pantalla llegan a él
+    const behind = [document.getElementById("contenu"), document.querySelector("body > footer")].filter(
+      (el): el is HTMLElement => el instanceof HTMLElement,
+    );
+    behind.forEach((el) => (el.inert = true));
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -40,6 +54,7 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
     document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      behind.forEach((el) => (el.inert = false));
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
@@ -94,32 +109,98 @@ export function HeaderNav({ locale, items, languages, labels }: Props) {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-menu"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-line-dark text-paper"
+          className={`relative flex h-11 w-11 items-center justify-center rounded-full border transition ${
+            open ? "border-lime bg-lime text-ink" : "border-line-dark text-lime hover:border-lime/70"
+          }`}
         >
           <span className="sr-only">{open ? labels.close : labels.menu}</span>
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+          {/* Hoja de cáñamo (cerrado) que gira y se convierte en una X (abierto) */}
+          <HempLeaf
+            className={`absolute h-6 w-6 transition duration-300 ${open ? "rotate-90 scale-50 opacity-0" : "rotate-0 opacity-100"}`}
+          />
+          <svg
+            viewBox="0 0 24 24"
+            className={`absolute h-5 w-5 transition duration-300 ${open ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6 6 18" />
           </svg>
         </button>
       </div>
-      {open && (
-        <nav
-          id="mobile-menu"
-          aria-label="Navigation"
-          className="fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col gap-2 bg-ink px-4 pt-6 md:hidden"
-        >
-          {items.map((it) => (
-            <Link
-              key={it.path}
-              href={localizedPath(locale, it.path)}
-              aria-current={isActive(it.path) ? "page" : undefined}
-              className="border-b border-line-dark py-4 text-2xl font-extrabold uppercase text-paper aria-[current=page]:text-lime"
-            >
-              {it.label}
-            </Link>
-          ))}
-        </nav>
-      )}
+      {/* El panel se monta en <body> y no dentro de la cabecera: el desenfoque (backdrop-filter) de la
+          cabecera convierte a esta en el contenedor de los elementos «fixed», y el panel quedaba de
+          64 px de alto, sin fondo, con los enlaces flotando sobre la página. */}
+      {open &&
+        createPortal(
+          <nav
+            id="mobile-menu"
+            aria-label="Navigation"
+            className="mobile-menu fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col overflow-y-auto bg-ink md:hidden"
+          >
+            {/* Decoración: brillo verde y hoja de cáñamo muy tenue */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_50%_at_100%_0%,rgb(126_244_36/0.14),transparent_70%)]"
+            />
+            <HempLeaf className="pointer-events-none absolute -bottom-10 -right-16 h-80 w-80 rotate-[-18deg] text-lime opacity-[0.05]" />
+
+            <ul className="relative flex flex-col px-5 pt-4">
+              {items.map((it, i) => (
+                <li key={it.path} className="mobile-menu-item" style={{ animationDelay: `${60 + i * 55}ms` }}>
+                  <Link
+                    href={localizedPath(locale, it.path)}
+                    aria-current={isActive(it.path) ? "page" : undefined}
+                    className="group flex items-center gap-4 border-b border-line-dark py-5 text-paper transition aria-[current=page]:text-lime"
+                  >
+                    <span className="w-7 font-mono text-xs text-lime/80" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="flex-1 text-[1.65rem] font-extrabold uppercase leading-none tracking-tight">
+                      {it.label}
+                    </span>
+                    <span aria-hidden="true" className="text-xl text-lime transition group-hover:translate-x-1">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {(quick.directions || quick.tel) && (
+              <div
+                className="mobile-menu-item relative mt-auto px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-8"
+                style={{ animationDelay: `${60 + items.length * 55}ms` }}
+              >
+                {quick.address && <p className="mb-3 text-sm text-muted-dark">{quick.address}</p>}
+                <div className="grid grid-cols-2 gap-3">
+                  {quick.directions && (
+                    <a
+                      href={quick.directions}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-12 items-center justify-center rounded-full bg-lime px-4 text-sm font-bold uppercase tracking-wider text-ink"
+                    >
+                      {quick.labels.directions}
+                    </a>
+                  )}
+                  {quick.tel && (
+                    <a
+                      href={quick.tel}
+                      className="inline-flex min-h-12 items-center justify-center rounded-full border border-lime px-4 text-sm font-bold uppercase tracking-wider text-lime"
+                    >
+                      {quick.labels.call}
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+          </nav>,
+          document.body,
+        )}
     </>
   );
 }

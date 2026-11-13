@@ -13,7 +13,7 @@ export function directionsUrl(s: SiteSettings): string | null {
   return null;
 }
 
-const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 const waHref = (phone: string) => `https://wa.me/${phone.replace(/[^\d]/g, "")}`;
 
 /**

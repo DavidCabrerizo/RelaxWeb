@@ -3,9 +3,11 @@ import { SiteLogo } from "@/components/brand/SiteLogo";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { getEnabledLocales } from "@/lib/site/defaults";
+import { directionsUrl, telHref } from "@/components/store/ContactActions";
+import type { SiteSettings } from "@/lib/content/types";
 import { HeaderNav } from "./HeaderNav";
 
-export async function Header({ locale, t, logoUrl }: { locale: Locale; t: Dictionary; logoUrl?: string }) {
+export async function Header({ locale, t, settings }: { locale: Locale; t: Dictionary; settings: SiteSettings }) {
   const items = [
     { path: "/produits", label: t.nav.products },
     { path: "/marques", label: t.nav.brands },
@@ -24,13 +26,21 @@ export async function Header({ locale, t, logoUrl }: { locale: Locale; t: Dictio
       </a>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Link href={localizedPath(locale, "/")} className="shrink-0" aria-label={`Relax Sélection — ${t.nav.home}`}>
-          <SiteLogo url={logoUrl} showTagline={false} className="h-9 w-auto max-w-[160px]" />
+          <SiteLogo url={settings.logoDarkUrl} showTagline={false} className="h-9 w-auto max-w-[160px]" />
         </Link>
         <HeaderNav
           locale={locale}
           items={items}
           languages={languages}
           labels={{ menu: t.nav.menu, close: t.nav.close, language: t.language.label }}
+          quick={{
+            directions: directionsUrl(settings),
+            tel: settings.phone ? telHref(settings.phone) : null,
+            address: [settings.street, [settings.postalCode, settings.city].filter(Boolean).join(" ")]
+              .filter(Boolean)
+              .join(", "),
+            labels: { directions: t.cta.directions, call: t.cta.call },
+          }}
         />
       </div>
     </header>

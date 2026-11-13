@@ -42,7 +42,7 @@ export default async function PublicRootLayout({ children, params }: LayoutProps
   return (
     <html lang={HTML_LANG[lang]} className={`${montserrat.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col bg-ink font-sans text-paper">
-        <Header locale={lang} t={t} logoUrl={settings.logoDarkUrl} />
+        <Header locale={lang} t={t} settings={settings} />
         <main id="contenu" className="flex-1">
           {children}
         </main>
