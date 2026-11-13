@@ -117,7 +117,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
           baseUrl: siteUrl(),
           url: siteUrl() + localizedPath(lang, "/contact"),
           locale: lang,
-          image: s.logoDarkUrl ?? siteUrl() + "/og.png",
+          image: s.logoDarkUrl ?? siteUrl() + "/og.jpg",
           description: t.meta.siteDescription,
         })}
       />

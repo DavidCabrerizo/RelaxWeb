@@ -477,6 +477,49 @@ Medido en local. En Vercel el TTFB baja gracias al CDN, pero las fotos reales de
 
 **Límites de esta verificación:** el panel solo se ha auditado en la pantalla de login, porque el sandbox no tiene red hacia Supabase para iniciar sesión. Hay que repetir `audit:a11y` con sesión, o revisar a mano, tras el despliegue.
 
+## Mejoras visuales: transiciones, favicon, imágenes al compartir y rendimiento (13/11/2026)
+
+**Transiciones** (API View Transitions mediante `<ViewTransition>` de React 19.3; sin librerías)
+- Entre páginas: `[lang]/template.tsx` (se vuelve a montar en cada navegación). La página anterior sale en 160 ms; la nueva entra en 380 ms subiendo 14 px. La cabecera (`.site-header`) no se mueve.
+- Producto: la foto viaja de la tarjeta (catálogo, portada, marca, categoría) a la ficha, con un leve desenfoque a mitad de recorrido. En «productos relacionados» está desactivado (`morph={false}`) para que solo viaje la foto que se abre.
+- Secciones y tarjetas (`.reveal`): aparecen al entrar en pantalla con animaciones CSS ligadas al scroll (`animation-timeline: view()`), sin JavaScript. Donde no hay soporte, se ven directamente. Con «reducir movimiento» no hay ninguna animación.
+- Navegadores sin View Transitions: la navegación funciona igual, sin animar.
+
+**Logo vectorial puro:** las letras de RELAX y SÉLECTION se han convertido a trazos (`scripts/brand/logo-to-paths.py` → `src/components/brand/logo-glyphs.ts`). El logo ya no espera a la fuente (mejor LCP) y se puede rasterizar en cualquier sitio.
+
+**Favicon** (`src/app/icon.svg`): un vape tipo bolígrafo con humo verde lima sobre el negro de la marca, legible a 16 px en pestañas claras y oscuras. `scripts/brand/build-icons.py` genera `favicon.ico` (16/32/48), `apple-icon.png` (180) y los iconos del manifiesto (`/manifest.webmanifest`: 192, 512 y 512 «maskable»).
+
+**Imágenes al compartir (Open Graph, 1200×630)**
+
+| Página | Imagen |
+|---|---|
+| Inicio y páginas fijas | `public/og.jpg`: el logo sobre negro con «VAPE • CBD • E-LIQUIDES • ACCESSOIRES · GENÈVE» (`scripts/brand/build-og.py`), 60 KB |
+| Producto | `/og/produit/<slug>.jpg?v=…`: su foto principal entera. Foto de catálogo con fondo liso → el fondo continúa ese color; foto real → tarjeta sobre la misma foto difuminada. Marca de agua con el logo |
+| Marca | `/og/marque/<slug>.jpg?v=…`: su logo centrado. Fondo blanco si el logo es oscuro, negro si es claro y, si no tiene transparencia, el color de su esquina. Sin logo, su portada; sin nada, `og.jpg` |
+| Producto o marca sin imagen | redirección a `og.jpg` |
+
+- JPEG siempre: WebP no se ve en todas las apps, y WhatsApp descarta vistas previas pesadas (las generadas pesan unos 20 KB).
+- `?v=` cambia al editar el producto o la marca (fecha y foto), para que redes y CDN no muestren una imagen antigua; el CDN guarda cada versión un año.
+- Solo se descargan imágenes del Supabase del proyecto o de la propia web (sin SSRF). Si la imagen está dañada, se usa `og.jpg`.
+- Sin texto dinámico en las imágenes generadas: no dependen de fuentes del servidor.
+
+**Rendimiento**
+- `experimental.inlineCss`: la CSS (≈9 KB) va dentro del HTML y no bloquea el primer pintado.
+- Montserrat con `display: "optional"`: no se repinta todo el texto al llegar la fuente, que era lo que fijaba el LCP. La fuente de sistema de reserva está ajustada a sus medidas.
+- Las fotos de la primera fila del catálogo, de las categorías y de las marcas se cargan con `preload`. En Next 16, `priority` está obsoleto y no surtía efecto.
+
+| Lighthouse (local, fotos de prueba) | Móvil (3 pasadas) | Escritorio |
+|---|---|---|
+| Inicio | 93–98 | 100 |
+| Catálogo | 90–95 | 100 |
+| Producto | 92–99 | 100 |
+| Contacto | 93–98 | 100 |
+| Marca | 96–99 | 100 |
+
+Accesibilidad, buenas prácticas y SEO: 100 en todas las páginas y perfiles.
+
+En móvil el LCP real medido es de 0,2–0,5 s. La nota simulada (2–3 s) suma el JavaScript de Next y React que se descarga en paralelo (≈125 KB comprimidos, imprescindibles para el panel, la navegación y las transiciones). Una prueba A/B confirmó que las transiciones no la empeoran. La medición que cuenta es PageSpeed Insights sobre la web publicada y, con tráfico real, los Core Web Vitals de Search Console.
+
 ## Siguientes fases
 
 - **Fase 9:** despliegue en Vercel, dominio, Search Console, manual del panel y retirada de los datos de demo.

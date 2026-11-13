@@ -7,6 +7,7 @@
  * Revisa las páginas públicas en móvil y escritorio, y la verificación de edad y el aviso de
  * cookies sin cookies previas. Sale con código 1 si encuentra incidencias.
  * Requisito local: un Chromium de Playwright (npx playwright install chromium) o CHROME_PATH.
+ * Se ejecuta con «reducir movimiento» para auditar el estado final (sin animaciones a medias).
  * Una herramienta automática detecta solo parte de los problemas: no sustituye a probar con
  * teclado y lector de pantalla.
  */
@@ -31,7 +32,9 @@ async function samplePages() {
 }
 
 async function audit(browser, { label, viewport, cookies, pages }) {
-  const ctx = await browser.newContext({ viewport });
+  // Con «reducir movimiento»: axe mide el estado final del contenido, no un fotograma a mitad
+  // de la animación de aparición (que termina siempre en opacidad 1)
+  const ctx = await browser.newContext({ viewport, reducedMotion: "reduce" });
   if (cookies) await ctx.addCookies(Object.entries(cookies).map(([name, value]) => ({ name, value, url: BASE })));
   let problems = 0;
   for (const path of pages) {

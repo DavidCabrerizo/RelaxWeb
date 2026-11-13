@@ -15,7 +15,7 @@ export async function Header({ locale, t, logoUrl }: { locale: Locale; t: Dictio
   const languages = (await getEnabledLocales()).map((l) => ({ locale: l, label: t.language[l], short: l }));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line-dark/70 bg-ink/90 backdrop-blur supports-[backdrop-filter]:bg-ink/75">
+    <header className="site-header sticky top-0 z-50 border-b border-line-dark/70 bg-ink/90 backdrop-blur supports-[backdrop-filter]:bg-ink/75">
       <a
         href="#contenu"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded-full focus:bg-lime focus:px-4 focus:py-2 focus:text-ink"

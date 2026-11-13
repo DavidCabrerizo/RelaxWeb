@@ -5,7 +5,7 @@ import { Breadcrumbs, PageHeader } from "@/components/ui/PageHeader";
 import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageContext } from "@/lib/i18n/page";
-import { pageMetadata } from "@/lib/seo/metadata";
+import { ogVersion, pageMetadata } from "@/lib/seo/metadata";
 import { getEnabledLocales } from "@/lib/site/defaults";
 import { getAllSlugs, getBrand, getProducts, findRedirect } from "@/lib/content/repository";
 
@@ -26,7 +26,11 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/marques/[s
     title: b.seoTitle || `${b.name} — ${t.nav.brands}`,
     description: b.seoDescription || b.description || t.meta.brands.description,
     absoluteTitle: Boolean(b.seoTitle),
-    image: b.coverUrl ?? b.logoUrl,
+    // Logo de la marca a 1200×630 (/og/marque/…); sin logo, su portada; sin nada, el logo de la tienda
+    image:
+      b.logoUrl || b.coverUrl
+        ? { url: `/og/marque/${b.slug}.jpg?v=${ogVersion(b.updatedAt, b.logoUrl, b.coverUrl)}`, alt: b.name }
+        : undefined,
   });
 }
 
@@ -46,7 +50,7 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/marques/[
     <>
       {brand.coverUrl && (
         <div className="relative aspect-[21/9] max-h-[420px] w-full overflow-hidden sm:aspect-[3/1]">
-          <Image src={brand.coverUrl} alt="" fill priority sizes="100vw" className="object-cover" />
+          <Image src={brand.coverUrl} alt="" fill preload sizes="100vw" className="object-cover" />
           <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
         </div>
       )}
@@ -60,9 +64,9 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/marques/[
       <section className="mx-auto max-w-6xl px-4 py-10" aria-labelledby="h-brand-products">
         <h2 id="h-brand-products" className="display text-2xl">{t.catalog.brandProducts}</h2>
         <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {products.map((p) => (
+          {products.map((p, i) => (
             <li key={p.slug}>
-              <ProductCard product={p} locale={lang} demoLabel={t.common.demo} />
+              <ProductCard product={p} locale={lang} demoLabel={t.common.demo} priority={i < 2} />
             </li>
           ))}
         </ul>

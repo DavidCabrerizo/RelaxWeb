@@ -4,6 +4,10 @@ import { securityHeaders } from "./src/lib/security/headers";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   poweredByHeader: false,
+  experimental: {
+    // CSS dentro del HTML (≈9 KB comprimida con Tailwind): sin petición que bloquee el primer pintado
+    inlineCss: true,
+  },
   async headers() {
     const headers = securityHeaders({
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,

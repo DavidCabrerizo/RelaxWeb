@@ -45,7 +45,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           baseUrl: siteUrl(),
           url: siteUrl() + localizedPath(lang, "/"),
           locale: lang,
-          image: settings.logoDarkUrl ?? siteUrl() + "/og.png",
+          image: settings.logoDarkUrl ?? siteUrl() + "/og.jpg",
           description: t.meta.siteDescription,
         })}
       />
@@ -53,7 +53,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <section className="relative overflow-hidden">
         {heroImage && (
           <>
-            <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover" />
+            <Image src={heroImage} alt="" fill preload sizes="100vw" className="object-cover" />
             <div aria-hidden="true" className="absolute inset-0 bg-ink/80" />
           </>
         )}

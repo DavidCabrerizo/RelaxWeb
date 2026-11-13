@@ -1,10 +1,12 @@
 /**
  * Logotipo Relax Sélection — PLACEHOLDER DEMO (vectorización aproximada).
  * Referencia: docs/brand/logo-referencia.png
- * Geometría calibrada sobre Montserrat 800 a 96px (posiciones medidas con getExtentOfChar):
+ * Letras convertidas a trazos con scripts/brand/logo-to-paths.py (Montserrat 800 a 96px):
  *   R 14–84 · E 84–148 · L 148–206 · A 206–277 · X 277–347 · altura de mayúscula ≈ y 45–112
  * Se sustituye por el archivo subido en /admin/configuracion cuando exista.
  */
+import { GLYPH_A, GLYPH_X, GLYPHS_REL, GLYPHS_TAGLINE } from "./logo-glyphs";
+
 type Props = {
   variant?: "dark" | "light"; // fondo sobre el que se coloca
   className?: string;
@@ -34,19 +36,10 @@ export function Logo({ variant = "dark", className, title = "Relax Sélection", 
         <path d="M334 30c-8-6-6-20 6-20 2-10 18-12 22-2 10-4 20 6 14 14 10 4 8 18-4 18 0 10-14 12-20 4-6 6-16 2-16-6" />
       </g>
 
-      {/* RELAX: REL blanco, A verde, X blanca */}
-      <text
-        x="14"
-        y="112"
-        fontFamily="var(--font-montserrat), Montserrat, Arial, sans-serif"
-        fontWeight="800"
-        fontSize="96"
-        letterSpacing="-1"
-      >
-        <tspan fill={base}>REL</tspan>
-        <tspan fill={accent}>A</tspan>
-        <tspan fill={base}>X</tspan>
-      </text>
+      {/* RELAX: REL blanco, A verde, X blanca (trazos de Montserrat 800: no depende de la fuente) */}
+      <path d={GLYPHS_REL} fill={base} />
+      <path d={GLYPH_A} fill={accent} />
+      <path d={GLYPH_X} fill={base} />
 
       {/* Trazo "/" de la X en verde */}
       <polygon points="280,112 300,112 346,45 326,45" fill={accent} />
@@ -68,18 +61,7 @@ export function Logo({ variant = "dark", className, title = "Relax Sélection", 
         <>
           <rect x="14" y="148" width="60" height="3.5" rx="1.75" fill={accent} />
           <rect x="326" y="148" width="60" height="3.5" rx="1.75" fill={accent} />
-          <text
-            x="200"
-            y="160"
-            textAnchor="middle"
-            fontFamily="var(--font-montserrat), Montserrat, Arial, sans-serif"
-            fontWeight="600"
-            fontSize="27"
-            letterSpacing="7"
-            fill={base}
-          >
-            SÉLECTION
-          </text>
+          <path d={GLYPHS_TAGLINE} fill={base} />
         </>
       )}
     </svg>

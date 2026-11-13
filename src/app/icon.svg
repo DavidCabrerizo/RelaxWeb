@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Relax Sélection: vape tipo bolígrafo echando humo verde. Fondo negro de la marca: se ve en pestañas claras y oscuras -->
+  <rect width="64" height="64" rx="14" fill="#111111"/>
+  <g transform="rotate(-38 32 40)">
+    <!-- boquilla (se estrecha hacia la punta) -->
+    <path d="M28.5 10.5h7l1.6 9h-10.2z" fill="#D9DED5"/>
+    <!-- cuerpo -->
+    <rect x="25" y="19" width="14" height="40" rx="5" fill="#FFFFFF"/>
+    <!-- anillo de luz y botón en el verde de la marca -->
+    <rect x="25" y="25" width="14" height="4.5" fill="#7EF424"/>
+    <circle cx="32" cy="40" r="2.6" fill="#7EF424"/>
+  </g>
+  <!-- humo: bocanadas que crecen desde la boquilla hasta formar la nube -->
+  <g fill="#7EF424">
+    <circle cx="16.8" cy="13.2" r="2.4" opacity="0.7"/>
+    <circle cx="22" cy="10.4" r="3.6" opacity="0.88"/>
+    <circle cx="30" cy="10" r="5.2"/>
+    <circle cx="39" cy="8.5" r="6.2"/>
+    <circle cx="48" cy="11.5" r="6"/>
+    <circle cx="53" cy="19.5" r="5.2"/>
+    <circle cx="44.5" cy="18" r="6"/>
+  </g>
+</svg>

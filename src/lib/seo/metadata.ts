@@ -30,12 +30,15 @@ export async function pageMetadata(opts: {
   description: string;
   absoluteTitle?: boolean;
   pageKey?: StaticPageKey;
-  image?: string;
+  /** Imagen al compartir (1200×630). Sin ella se usa el logo de la tienda (/og.jpg). */
+  image?: { url: string; alt: string };
   noindex?: boolean;
 }): Promise<Metadata> {
   const { locale, path, absoluteTitle } = opts;
-  // Imagen propia (foto de producto/portada de marca) o la imagen por defecto de la web
-  const image = opts.image ?? "/og.png";
+  // Imagen propia (foto del producto, logo de la marca) o el logo de la tienda
+  const image = opts.image
+    ? { ...opts.image, width: 1200, height: 630, type: "image/jpeg" }
+    : { url: "/og.jpg", alt: "Relax Sélection — Vape, CBD, e-liquides · Genève", width: 1200, height: 630, type: "image/jpeg" };
   const override = opts.pageKey ? await getSeoOverride(opts.pageKey, locale) : undefined;
   const title = override?.title || opts.title;
   const description = (override?.description || opts.description).slice(0, 170);
@@ -58,8 +61,15 @@ export async function pageMetadata(opts: {
       siteName: "Relax Sélection",
       locale: locale === "fr" ? "fr_CH" : "en_GB",
       type: "website",
-      images: [{ url: image, ...(opts.image ? {} : { width: 1200, height: 630, alt: "Relax Sélection" }) }],
+      images: [image],
     },
-    twitter: { card: "summary_large_image", title, description, images: [image] },
+    twitter: { card: "summary_large_image", title, description, images: [{ url: image.url, alt: image.alt }] },
   };
+}
+
+/** Versión corta para la URL de una imagen al compartir: cambia cuando cambia el contenido. */
+export function ogVersion(...parts: (string | undefined)[]): string {
+  let h = 2166136261;
+  for (const ch of parts.filter(Boolean).join("|")) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return (h >>> 0).toString(36);
 }

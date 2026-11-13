@@ -59,7 +59,7 @@ export function PageHeader({
 
 export function SectionTitle({ title, text, action }: { title: string; text?: string; action?: React.ReactNode }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div className="reveal mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
         <h2 className="display text-2xl sm:text-3xl">{title}</h2>
         {text && <p className="mt-2 max-w-xl text-muted-dark">{text}</p>}

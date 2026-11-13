@@ -58,9 +58,9 @@ export default async function CategoryPage({ params }: PageProps<"/[lang]/catego
         <p className="text-sm text-muted-dark" role="status">{fmt(t.catalog.count, { n: products.length })}</p>
         <h2 className="sr-only">{t.nav.products}</h2>
         <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {products.map((p) => (
+          {products.map((p, i) => (
             <li key={p.slug}>
-              <ProductCard product={p} locale={lang} demoLabel={t.common.demo} />
+              <ProductCard product={p} locale={lang} demoLabel={t.common.demo} priority={i < 2} />
             </li>
           ))}
         </ul>

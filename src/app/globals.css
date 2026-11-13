@@ -68,7 +68,89 @@
   }
 }
 
+/* ------------------------------------------------------------------
+ * Transiciones
+ * ------------------------------------------------------------------ */
+
+/* Entre páginas: la anterior se va rápido y la nueva entra con calma (subiendo un poco).
+ * Asimetría deliberada: lo viejo no compite por la atención; lo nuevo da tiempo a situarse. */
+::view-transition {
+  pointer-events: none; /* los clics durante la animación llegan a la página */
+}
+::view-transition-old(.page-exit) {
+  animation: 160ms cubic-bezier(0.4, 0, 1, 1) both page-out;
+}
+::view-transition-new(.page-enter) {
+  animation: 380ms cubic-bezier(0.22, 1, 0.36, 1) 90ms both page-in;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* La cabecera es el ancla visual: no se mueve durante la transición */
+.site-header {
+  view-transition-name: site-header;
+}
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Foto de producto: de la tarjeta a la ficha (y vuelta) con un desenfoque mínimo a mitad de vuelo */
+::view-transition-group(.morph) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  35% {
+    filter: blur(3px);
+  }
+}
+
+/* Secciones y tarjetas: aparecen al entrar en pantalla. Solo CSS (scroll-driven animations):
+ * sin JavaScript ni coste en el hilo principal. Donde el navegador no lo soporta, el contenido
+ * se ve directamente. Nunca se aplica a lo que ya está en la primera pantalla al cargar. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%; /* opaca del todo en cuanto entra entera en pantalla */
+    }
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
   *,
   *::before,
   *::after {

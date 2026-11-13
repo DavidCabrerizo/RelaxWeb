@@ -8,6 +8,11 @@ Pruebas: `npm test` (unitarias). Auditorías contra un servidor en marcha:
 `npm run audit:a11y` (axe, WCAG 2.2 AA; `BASE_URL=https://… npm run audit:a11y` para la web publicada)
 y `npm run audit:perf` (Lighthouse móvil).
 
+Marca: `python3 scripts/brand/logo-to-paths.py` (letras del logo a trazos), `npx tsx scripts/brand/export-logo.tsx`
+(SVG del logo), `python3 scripts/brand/build-icons.py` (favicon e iconos) y `python3 scripts/brand/build-og.py`
+(imagen al compartir por defecto). Ejemplos de imágenes de producto y marca:
+`node --conditions=react-server --import tsx scripts/og/sample-og.mts carpeta-salida`.
+
 ## Arrancar en local
 
 ```bash

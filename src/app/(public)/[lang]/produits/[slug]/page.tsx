@@ -7,7 +7,7 @@ import { ContactActions } from "@/components/store/ContactActions";
 import { isLocale, localizedPath } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { pageContext } from "@/lib/i18n/page";
-import { pageMetadata } from "@/lib/seo/metadata";
+import { ogVersion, pageMetadata } from "@/lib/seo/metadata";
 import { getEnabledLocales } from "@/lib/site/defaults";
 import { getAllSlugs, getProduct, getProducts, getSettings, findRedirect } from "@/lib/content/repository";
 
@@ -28,7 +28,10 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/produits/[
     title: p.seoTitle || `${p.name} — ${p.brand.name}`,
     description: p.seoDescription || `${p.shortDescription} ${t.catalog.inStore} — Genève.`,
     absoluteTitle: Boolean(p.seoTitle),
-    image: p.images[0]?.url,
+    // Foto del producto compuesta a 1200×630 (/og/produit/…); sin foto, el logo de la tienda
+    image: p.images[0]
+      ? { url: `/og/produit/${p.slug}.jpg?v=${ogVersion(p.updatedAt, p.images[0].url)}`, alt: p.name }
+      : undefined,
   });
 }
 
@@ -137,7 +140,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/produit
           <ul className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {related.map((p) => (
               <li key={p.slug}>
-                <ProductCard product={p} locale={lang} demoLabel={t.common.demo} />
+                <ProductCard product={p} locale={lang} demoLabel={t.common.demo} morph={false} />
               </li>
             ))}
           </ul>
